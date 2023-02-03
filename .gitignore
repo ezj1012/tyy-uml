@@ -1,0 +1,12 @@
+/.idea/
+/logs/
+*.iml
+/target/
+/databases/
+/plugins
+/public/*/
+.project
+.classpath
+.settings/
+.setting/
+/dependency-reduced-pom.xml
