@@ -1,27 +1,32 @@
 package com.tyy.uml.editor;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.tyy.uml.adapter.DComponentListener;
 import com.tyy.uml.adapter.DMouseListener;
 import com.tyy.uml.bean.UMLConfig;
-import com.tyy.uml.comm.FieldPanel;
+import com.tyy.uml.comm.SingleColorIcon;
+import com.tyy.uml.comm.SingleColorIconButton;
+import com.tyy.uml.comm.TitleLabelPanel;
 import com.tyy.uml.main.Ctrl;
-import com.tyy.uml.util.Buts;
 import com.tyy.uml.util.SWUtils;
 
 public class UMLTitle extends JLayeredPane implements DMouseListener, DComponentListener {
 
     private static final long serialVersionUID = 1L;
+
+    private static final int SIZE = 20;
 
     protected int pressedX = 0;
 
@@ -33,15 +38,15 @@ public class UMLTitle extends JLayeredPane implements DMouseListener, DComponent
 
     UMLEditor editor;
 
-    JPanel btns;
+    List<SingleColorIconButton> btns = new ArrayList<>();
 
-    FieldPanel fieldPanel;
+    TitleLabelPanel fieldPanel;
 
     public UMLTitle(Ctrl ctrl, UMLEditor editor) {
         this.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.ctrl = ctrl;
         this.editor = editor;
-        SWUtils.fixedHeight(this, 20);
+        SWUtils.fixedHeight(this, SIZE);
         this.initCentent();
         this.initBtn();
         this.addComponentListener(this);
@@ -51,29 +56,52 @@ public class UMLTitle extends JLayeredPane implements DMouseListener, DComponent
         this.fieldPanel.addMouseMotionListener(this);
     }
 
+    SingleColorIconButton viewBtn;
+
+    SingleColorIconButton listBtn;
+
+    SingleColorIconButton closeBtn;
+
     private void initBtn() {
-        btns = new JPanel();
-        btns.setLayout(new BoxLayout(btns, BoxLayout.X_AXIS));
-        btns.setBackground(Color.RED);
-        SWUtils.optimize(btns);
-        JButton fixedBtn = Buts.create(20, 20, null, (btn, g) -> {
-            g.setColor(this.getBackground());
-            g.fillRect(0, 0, btn.getWidth(), btn.getHeight());
-            
-            // System.out.println(this.getParent().getBackground());
-            // System.out.println(btn.getWidth() + " " + btn.getHeight());
-            // g.setColor(Color.WHITE);
-            // g.fillRect(0, 0, 20, 20);
-            g.setColor(Color.BLACK);
+        btns.add(createBtn("view.png", (btn, e) -> this.ctrl.getScrollHelper().setCenter(editor.getUmlInfoPanel())));
+        btns.add(createBtn("list.png", (btn, e) -> this.ctrl.toggleEditorList()));
+        btns.add(createBtn("close.png", (btn, e) -> this.ctrl.hideEditor()));
+        for (int i = btns.size(); i > 0; i--) {
+            btns.get(i - 1).setBounds(getWidth() - SIZE * i, 0, SIZE, SIZE);
+            this.add(btns.get(i - 1), JLayeredPane.PALETTE_LAYER);
+        }
 
-            g.fillArc(4, 4, 12, 12, 0, 360);
-
+        SingleColorIconButton fixedBtn = createBtn("unlock.png", (btn, e) -> {
+            fixedPos = !fixedPos;
+            btn.setSelected(fixedPos);
+            this.repaint();
         });
+        fixedBtn.setSelectedIcon(new SingleColorIcon("lock.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
+        fixedBtn.setBounds(5, 0, SIZE, SIZE);
+        this.add(fixedBtn, JLayeredPane.PALETTE_LAYER);
+    }
 
-        // JButton b = new JButton("你好");
-        btns.add(fixedBtn);
-        // btns.add(b);
-        this.add(btns, JLayeredPane.PALETTE_LAYER);
+    private SingleColorIconButton createBtn(String icon, BiConsumer<SingleColorIconButton, ActionEvent> l) {
+        SingleColorIconButton button = new SingleColorIconButton(SIZE, SIZE, new SingleColorIcon(icon, SIZE - 6, SIZE - 6), new Color(133, 133, 133));
+        button.setRolloverBackgroupColor(new Color(70, 70, 70));
+        // button.setBounds(offIdx * SIZE, 0, SIZE, SIZE);
+        if (l != null) {
+            button.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    l.accept(button, e);
+                }
+
+            });
+        }
+        return button;
+    }
+
+    public void setButtonRolloverBackgroupColor(Color rolloverBackgroupColor) {
+        for (SingleColorIconButton c : this.btns) {
+            c.setRolloverBackgroupColor(rolloverBackgroupColor);
+        }
     }
 
     @Override
@@ -87,7 +115,7 @@ public class UMLTitle extends JLayeredPane implements DMouseListener, DComponent
 
     private void initCentent() {
         Color fontColor = SWUtils.decodeColor(ctrl.getCfg().getEditorFontColor(), UMLConfig.cd4d4d4);
-        fieldPanel = new FieldPanel(20, fontColor);
+        fieldPanel = new TitleLabelPanel(SIZE, fontColor);
         fieldPanel.setHorizontalAlignment(JTextField.CENTER);
         this.add(fieldPanel, JLayeredPane.DEFAULT_LAYER);
     }
@@ -127,8 +155,9 @@ public class UMLTitle extends JLayeredPane implements DMouseListener, DComponent
     @Override
     public void componentResized(ComponentEvent e) {
         fieldPanel.setBounds(0, 0, e.getComponent().getWidth(), e.getComponent().getHeight());
-        int w = btns.getComponentCount() * 20;
-        btns.setBounds(e.getComponent().getWidth() - w, 0, w, 20);
+        for (int i = btns.size(); i > 0; i--) {
+            btns.get(btns.size() - i).setBounds(e.getComponent().getWidth() - SIZE * i, 0, SIZE, SIZE);
+        }
     }
 
 }

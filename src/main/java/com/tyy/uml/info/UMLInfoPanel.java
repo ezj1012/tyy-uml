@@ -29,7 +29,7 @@ import com.tyy.uml.bean.UMLModelField;
 import com.tyy.uml.bean.UMLModelParser;
 import com.tyy.uml.bean.BeanHelper.BeanObservale;
 import com.tyy.uml.bean.BeanHelper.BeanObserver;
-import com.tyy.uml.comm.FieldPanel;
+import com.tyy.uml.comm.TitlePanel;
 import com.tyy.uml.group.GroupItem;
 import com.tyy.uml.main.Ctrl;
 import com.tyy.uml.util.SWUtils;
@@ -167,7 +167,7 @@ public class UMLInfoPanel extends GroupItem implements BeanObserver {
 
         private static final long serialVersionUID = 1L;
 
-        private List<FieldPanel> cacheMI = new ArrayList<>();
+        private List<TitlePanel> cacheMI = new ArrayList<>();
 
         private UMLInfoPanel infoPanel;
 
@@ -185,14 +185,14 @@ public class UMLInfoPanel extends GroupItem implements BeanObserver {
 
         public void refreshFields(List<UMLModelField> fields) {
             int h = 0;
-            List<FieldPanel> result = new ArrayList<>();
+            List<TitlePanel> result = new ArrayList<>();
             for (int i = 0; i < fields.size(); i++) {
                 UMLModelField model = fields.get(i);
-                FieldPanel mi = null;
+                TitlePanel mi = null;
                 if (cacheMI.size() > i) {
                     mi = cacheMI.get(i);
                 } else {
-                    mi = new FieldPanel();
+                    mi = new TitlePanel();
                     mi.addMouseListener(infoPanel);
                     mi.addMouseMotionListener(infoPanel);
                     cacheMI.add(mi);
@@ -226,7 +226,7 @@ public class UMLInfoPanel extends GroupItem implements BeanObserver {
         public void setFieldColor(Color fieldColor) {
             this.fieldColor = fieldColor;
             if (cacheMI != null) {
-                for (FieldPanel umlFieldInfoPanel : cacheMI) {
+                for (TitlePanel umlFieldInfoPanel : cacheMI) {
                     umlFieldInfoPanel.setFieldColor(fieldColor);
                     umlFieldInfoPanel.repaint();
                 }

@@ -15,11 +15,12 @@ import javax.swing.event.DocumentEvent;
 
 import com.tyy.uml.adapter.DComponentListener;
 import com.tyy.uml.adapter.DDocumentListener;
+import com.tyy.uml.bean.BeanHelper.BeanObservale;
+import com.tyy.uml.bean.BeanHelper.BeanObserver;
 import com.tyy.uml.bean.UMLConfig;
 import com.tyy.uml.bean.UMLModel;
 import com.tyy.uml.bean.UMLModelParser;
-import com.tyy.uml.bean.BeanHelper.BeanObservale;
-import com.tyy.uml.bean.BeanHelper.BeanObserver;
+import com.tyy.uml.info.UMLInfoPanel;
 import com.tyy.uml.main.Ctrl;
 import com.tyy.uml.util.SWUtils;
 
@@ -31,6 +32,8 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
 
     static final int fixedHeight = 300;
 
+    UMLList umlList;
+
     UMLTitle umlTitle;
 
     JPanel content;
@@ -41,6 +44,8 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
 
     private UMLModel model;
 
+    UMLInfoPanel umlInfoPanel;
+
     private Ctrl ctrl;
 
     public UMLEditor(Ctrl ctrl) {
@@ -50,7 +55,9 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
 
         this.umlTitle = new UMLTitle(ctrl, this);
         this.add(umlTitle, BorderLayout.NORTH);
-
+        this.umlList = new UMLList();
+        this.add(umlList, BorderLayout.WEST);
+        umlList.setVisible(false);
         this.initEditorPanel();
         this.setCenter();
     }
@@ -66,6 +73,7 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
         content.add(rltEditor);
         this.editorPane.addKeyListener(ctrl);
         this.rltEditor.addKeyListener(ctrl);
+        this.umlList.addKeyListener(ctrl);
         this.add(content, BorderLayout.CENTER);
     }
 
@@ -123,7 +131,9 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
         }
     }
 
-    public void setModel(UMLModel newModel) {
+    public void setModel(UMLInfoPanel umlInfoPanel) {
+        this.umlInfoPanel = umlInfoPanel;
+        UMLModel newModel = umlInfoPanel.getModel();
         if (model == newModel) { return; }
         if (model != null && model instanceof BeanObservale) {
             ((BeanObservale) model).deleteObserver(this);
@@ -159,6 +169,14 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
         setCenter();
     }
 
+    public UMLModel getModel() {
+        return model;
+    }
+
+    public UMLInfoPanel getUmlInfoPanel() {
+        return umlInfoPanel;
+    }
+
     public static class UMLRltEditor extends JPanel {
 
         private static final long serialVersionUID = 1L;
@@ -176,6 +194,15 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
             this.model = model;
         }
 
+    }
+
+    public void toggleEditorList() {
+        if (!umlList.isVisible()) {
+            umlList.refresModel(umlInfoPanel);
+            umlList.setVisible(true);
+        } else {
+            umlList.setVisible(false);
+        }
     }
 
 }

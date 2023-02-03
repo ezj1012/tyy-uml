@@ -23,7 +23,6 @@ import javax.swing.border.EmptyBorder;
 
 import com.tyy.uml.bean.BeanHelper.BeanObserver;
 import com.tyy.uml.bean.UMLConfig;
-import com.tyy.uml.comm.JFrameParameters;
 import com.tyy.uml.util.SWUtils;
 
 public class TitleBar extends JPanel implements ComponentListener, BeanObserver {

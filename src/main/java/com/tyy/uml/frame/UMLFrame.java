@@ -3,19 +3,15 @@ package com.tyy.uml.frame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.bean.BeanHelper.BeanObservale;
 import com.tyy.uml.bean.UMLConfig;
-import com.tyy.uml.comm.JFrameProc;
 import com.tyy.uml.main.UMLMainPane;
 import com.tyy.uml.util.SWUtils;
 

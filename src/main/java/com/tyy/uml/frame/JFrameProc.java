@@ -1,4 +1,4 @@
-package com.tyy.uml.comm;
+package com.tyy.uml.frame;
 
 import static com.sun.jna.platform.win32.WinUser.SWP_FRAMECHANGED;
 import static com.sun.jna.platform.win32.WinUser.SWP_NOMOVE;

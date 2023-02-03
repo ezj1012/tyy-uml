@@ -93,7 +93,7 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
 
     public UMLEditor setEditorContent(UMLInfoPanel info) {
         editor.setVisible(true);
-        editor.setModel(info.getModel());
+        editor.setModel(info);
         umlPanel.setCenter(info);
         this.revalidate();
         this.repaint();
@@ -101,7 +101,8 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
     }
 
     public void hideEditor() {
-        this.remove(editor);
+        // this.remove(editor);
+        this.editor.setVisible(false);
     }
 
     @Override
@@ -161,6 +162,17 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
     @Override
     public UMLConfig getCfg() {
         return config;
+    }
+
+    @Override
+    public UMLScrollHelper getScrollHelper() {
+        return umlScorllPanel;
+    }
+
+    @Override
+    public void toggleEditorList() {
+        this.editor.toggleEditorList();
+
     }
 
 }

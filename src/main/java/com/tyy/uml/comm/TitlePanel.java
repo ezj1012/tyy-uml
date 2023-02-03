@@ -6,19 +6,20 @@ import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.tyy.uml.util.SWUtils;
 
-public class FieldPanel extends JPanel {
+public class TitlePanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
     JTextField showField;
 
-    public FieldPanel() {
+    public TitlePanel() {
         this.setLayout(new BorderLayout());
         this.setOpaque(false);
         showField = createLabel(12, Font.PLAIN, Color.BLACK, 0, 5, 0, 0);
@@ -26,11 +27,11 @@ public class FieldPanel extends JPanel {
         SWUtils.fixedHeight(this, 16);
     }
 
-    public FieldPanel(int fixedHeight, Color fontColor) {
+    public TitlePanel(int fixedHeight, Color fontColor) {
         this(fixedHeight, fontColor, 0, 0, 0, 0);
     }
 
-    public FieldPanel(int fixedHeight, Color fontColor, int top, int left, int bottom, int right) {
+    public TitlePanel(int fixedHeight, Color fontColor, int top, int left, int bottom, int right) {
         this.setLayout(new BorderLayout());
         this.setOpaque(false);
         showField = createLabel(fixedHeight - 4, Font.PLAIN, fontColor, top, left, bottom, right);
@@ -38,7 +39,7 @@ public class FieldPanel extends JPanel {
         SWUtils.fixedHeight(this, fixedHeight);
     }
 
-    public FieldPanel(int fontSize, int fontStyle, Color fontColor, int top, int left, int bottom, int right) {
+    public TitlePanel(int fontSize, int fontStyle, Color fontColor, int top, int left, int bottom, int right) {
         this.setLayout(new BorderLayout());
         this.setOpaque(false);
         showField = createLabel(fontSize, fontStyle, fontColor, top, left, bottom, right);
