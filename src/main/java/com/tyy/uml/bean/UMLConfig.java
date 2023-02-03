@@ -14,9 +14,11 @@ public class UMLConfig {
     public static final Color c252526 = new Color(37, 37, 38);
 
     public static final Color c333333 = new Color(51, 51, 51);
-    
+
     public static final Color c424242 = new Color(66, 66, 66);
+
     public static final Color c4F4F4F = new Color(79, 79, 79);
+
     public static final Color c5E5E5E = new Color(94, 94, 94);
 
     public static final Color cd4d4d4 = new Color(212, 212, 212);
@@ -26,7 +28,7 @@ public class UMLConfig {
     public static void main(String[] args) {
         System.out.println(SWUtils.toHex(c5E5E5E));
     }
-    
+
     private String canvasBackColor;
 
     private String canvasThumbColor;
@@ -42,6 +44,10 @@ public class UMLConfig {
     private String editorFontColor;
 
     private String editorCaretColor;
+
+    private int frameWidth = 1000;
+
+    private int frameHeight = 600;
 
     private int canvasWidth = 6000;
 

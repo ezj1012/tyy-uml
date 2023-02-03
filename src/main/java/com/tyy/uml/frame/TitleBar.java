@@ -12,6 +12,7 @@ import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.Observable;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonModel;
@@ -20,9 +21,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.tyy.uml.bean.BeanHelper.BeanObserver;
+import com.tyy.uml.bean.UMLConfig;
 import com.tyy.uml.comm.JFrameParameters;
+import com.tyy.uml.util.SWUtils;
 
-public class TitleBar extends JPanel implements ComponentListener {
+public class TitleBar extends JPanel implements ComponentListener, BeanObserver {
 
     private static final long serialVersionUID = 1L;
 
@@ -212,6 +216,17 @@ public class TitleBar extends JPanel implements ComponentListener {
         jButton.setForeground(new Color(0, 0, 0, 64));
         jButton.addActionListener(l);
         return jButton;
+    }
+
+    @Override
+    public void update(Observable o, Object source, String prop, Object oldValue, Object newValue) {
+        if (source instanceof UMLConfig) {
+            if (isNullOrEq(prop, "editorTitleBackColor")) {
+                UMLConfig cfg = (UMLConfig) source;
+                Color titleBackColor = SWUtils.decodeColor(cfg.getEditorTitleBackColor(), UMLConfig.c333333);
+                this.refreshVisible(titleBackColor);
+            }
+        }
     }
 
 }

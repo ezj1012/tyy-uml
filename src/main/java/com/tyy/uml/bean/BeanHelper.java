@@ -68,7 +68,11 @@ public class BeanHelper {
         }
 
         void update(Observable o, Object source, String prop, Object oldValue, Object newValue);
-
+        
+        default boolean isNullOrEq(String prop, String e) {
+            return prop == null || e.equals(prop);
+        }
+        
     }
 
     public static class BeanCallback extends Observable implements BeanObservale, MethodInterceptor {

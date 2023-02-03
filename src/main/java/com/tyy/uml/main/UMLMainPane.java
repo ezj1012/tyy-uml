@@ -1,5 +1,6 @@
 package com.tyy.uml.main;
 
+import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -15,12 +16,14 @@ import com.alibaba.fastjson2.JSON;
 import com.tyy.uml.adapter.DComponentListener;
 import com.tyy.uml.adapter.DKeyListener;
 import com.tyy.uml.bean.BeanHelper;
+import com.tyy.uml.bean.BeanHelper.BeanObservale;
 import com.tyy.uml.bean.SaveData;
 import com.tyy.uml.bean.UMLConfig;
 import com.tyy.uml.bean.UMLModel;
 import com.tyy.uml.canvas.UMLCanvas;
 import com.tyy.uml.canvas.UMLScrollHelper;
 import com.tyy.uml.editor.UMLEditor;
+import com.tyy.uml.frame.UMLFrame;
 import com.tyy.uml.group.GroupItem;
 import com.tyy.uml.info.UMLInfoPanel;
 
@@ -29,6 +32,8 @@ import cn.hutool.core.io.IoUtil;
 public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctrl, DKeyListener {
 
     private static final long serialVersionUID = 1L;
+
+    UMLFrame frame;
 
     UMLCanvas umlPanel;
 
@@ -42,15 +47,16 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
 
     List<UMLModel> models = new ArrayList<UMLModel>();
 
-    public UMLMainPane(File config) {
+    public UMLMainPane(UMLFrame frame, File config) {
+        this.frame = frame;
         this.configFile = config;
         this.loadDatas(config);
+        this.setPreferredSize(new Dimension(this.config.getFrameWidth(), this.config.getFrameHeight()));
         umlPanel = new UMLCanvas(this);
         editor = new UMLEditor(this);
         this.addComponentListener(this);
         this.addComponentListener(editor);
         initScorll();
-        // this.add(umlPanel, JLayeredPane.DEFAULT_LAYER);
         this.add(editor, JLayeredPane.PALETTE_LAYER);
         this.addKeyListener(this);
         umlPanel.addKeyListener(this);
@@ -69,6 +75,7 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         umlPanel.refreshModels(models);
         umlPanel.refreshConfig(config);
         editor.refreshConfig(config);
+        ((BeanObservale) config).addObserver(frame.getTitleBar());
     }
 
     @Override
@@ -113,8 +120,12 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         } catch (Exception e) {
             saveData = saveDatas(configFile);
         }
+        if (this.config != null && this.config instanceof BeanObservale) {
+            ((BeanObservale) this.config).deleteObservers();
+        }
         this.config = BeanHelper.proxy(saveData.getConfig());
         models.addAll(saveData.getModels());
+
         return new SaveData(this.config, saveData.getModels());
     }
 
