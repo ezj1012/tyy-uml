@@ -2,6 +2,7 @@ package com.tyy.uml.core.gui.frame;
 
 import java.awt.AWTException;
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
@@ -58,6 +59,10 @@ public class Tray {
             if (!frame.isVisible()) {
                 frame.doVisible();
             }
+            if (frame.getState() == Frame.ICONIFIED) {
+                frame.setExtendedState(Frame.NORMAL);
+            }
+            frame.requestFocus();
         });
     }
 

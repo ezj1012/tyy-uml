@@ -34,7 +34,7 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
 
     UMLList umlList;
 
-    UMLTitle umlTitle;
+    UMLEditorTitle umlTitle;
 
     JPanel content;
 
@@ -42,7 +42,7 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
 
     UMLRltEditor rltEditor = new UMLRltEditor(this);
 
-    private UMLModel model;
+    UMLModel model;
 
     UMLInfoPanel umlInfoPanel;
 
@@ -53,7 +53,7 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
         this.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.setLayout(new BorderLayout());
 
-        this.umlTitle = new UMLTitle(ctrl, this);
+        this.umlTitle = new UMLEditorTitle(ctrl, this);
         this.add(umlTitle, BorderLayout.NORTH);
         this.umlList = new UMLList();
         this.add(umlList, BorderLayout.WEST);

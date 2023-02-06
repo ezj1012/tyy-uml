@@ -26,6 +26,7 @@ import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
 import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.gui.editor.UMLEditor;
+import com.tyy.uml.gui.editor.UMLSettings;
 import com.tyy.uml.gui.frame.UMLFrame;
 import com.tyy.uml.gui.info.UMLInfoPanel;
 import com.tyy.uml.util.SystemUtils;
@@ -52,7 +53,7 @@ public class UMLControllerPane extends JLayeredPane implements DComponentListene
         if (workConfig.getProjects().size() == 0) {
             createProject(new UMLProject("", randFile()));
         }
-        loadProject(workConfig.getProjects().get(0));
+        loadProject(workConfig.getProjects().get(0), false);
         this.setPreferredSize(new Dimension(workConfig.getConfig().getFrameWidth(), workConfig.getConfig().getFrameHeight()));
         umlPanel = new UMLCanvas(this);
         editor = new UMLEditor(this);
@@ -87,9 +88,11 @@ public class UMLControllerPane extends JLayeredPane implements DComponentListene
     }
 
     @Override
-    public UMLProjectData loadProject(UMLProject project) {
+    public UMLProjectData loadProject(UMLProject project, boolean peek) {
         if (projectData != null && projectData.getConfig() instanceof BeanObservale) {
-            ((BeanObservale) projectData.getConfig()).deleteObservers();
+            if (!peek) {
+                ((BeanObservale) projectData.getConfig()).deleteObservers();
+            }
         }
 
         if (SystemUtils.isEmpty(project.getPath())) {
@@ -112,7 +115,10 @@ public class UMLControllerPane extends JLayeredPane implements DComponentListene
         }
         UMLGUIConfig config = data.getConfig();
         data.setConfig(BeanHelper.proxy(config));
-        return this.projectData = data;
+        if (!peek) {
+            this.projectData = data;
+        }
+        return data;
     }
 
     @Override

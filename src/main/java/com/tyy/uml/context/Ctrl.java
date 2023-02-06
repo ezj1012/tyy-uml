@@ -13,7 +13,7 @@ public interface Ctrl extends DKeyListener {
 
     void createProject(UMLProject project);
 
-    UMLProjectData loadProject(UMLProject project);
+    UMLProjectData loadProject(UMLProject project, boolean peek);
 
     UMLProjectData saveProject(UMLProjectData project);
 

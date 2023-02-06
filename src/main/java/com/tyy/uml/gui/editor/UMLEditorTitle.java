@@ -22,7 +22,7 @@ import com.tyy.uml.gui.comm.SingleColorIconButton;
 import com.tyy.uml.gui.comm.TitleLabelPanel;
 import com.tyy.uml.util.SWUtils;
 
-public class UMLTitle extends JLayeredPane implements DMouseListener, DComponentListener {
+public class UMLEditorTitle extends JLayeredPane implements DMouseListener, DComponentListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,15 +34,19 @@ public class UMLTitle extends JLayeredPane implements DMouseListener, DComponent
 
     protected boolean fixedPos = false;
 
+    protected boolean setting = false;
+
     Ctrl ctrl;
 
     UMLEditor editor;
 
-    List<SingleColorIconButton> btns = new ArrayList<>();
+    List<SingleColorIconButton> rightBtns = new ArrayList<>();
+
+    List<SingleColorIconButton> leftBtns = new ArrayList<>();
 
     TitleLabelPanel fieldPanel;
 
-    public UMLTitle(Ctrl ctrl, UMLEditor editor) {
+    public UMLEditorTitle(Ctrl ctrl, UMLEditor editor) {
         this.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.ctrl = ctrl;
         this.editor = editor;
@@ -56,19 +60,13 @@ public class UMLTitle extends JLayeredPane implements DMouseListener, DComponent
         this.fieldPanel.addMouseMotionListener(this);
     }
 
-    SingleColorIconButton viewBtn;
-
-    SingleColorIconButton listBtn;
-
-    SingleColorIconButton closeBtn;
-
     private void initBtn() {
-        btns.add(createBtn("view.png", (btn, e) -> this.ctrl.getScrollHelper().setCenter(editor.getUmlInfoPanel())));
-        btns.add(createBtn("list.png", (btn, e) -> this.ctrl.toggleEditorList()));
-        btns.add(createBtn("close.png", (btn, e) -> this.ctrl.hideEditor()));
-        for (int i = btns.size(); i > 0; i--) {
-            btns.get(i - 1).setBounds(getWidth() - SIZE * i, 0, SIZE, SIZE);
-            this.add(btns.get(i - 1), JLayeredPane.PALETTE_LAYER);
+        rightBtns.add(createBtn("view.png", (btn, e) -> this.ctrl.getScrollHelper().setCenter(editor.getUmlInfoPanel())));
+        rightBtns.add(createBtn("list.png", (btn, e) -> this.ctrl.toggleEditorList()));
+        rightBtns.add(createBtn("close.png", (btn, e) -> this.ctrl.hideEditor()));
+        for (int i = rightBtns.size(); i > 0; i--) {
+            rightBtns.get(i - 1).setBounds(getWidth() - SIZE * i, 0, SIZE, SIZE);
+            this.add(rightBtns.get(i - 1), JLayeredPane.PALETTE_LAYER);
         }
 
         SingleColorIconButton fixedBtn = createBtn("unlock.png", (btn, e) -> {
@@ -77,8 +75,18 @@ public class UMLTitle extends JLayeredPane implements DMouseListener, DComponent
             this.repaint();
         });
         fixedBtn.setSelectedIcon(new SingleColorIcon("lock.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
-        fixedBtn.setBounds(5, 0, SIZE, SIZE);
-        this.add(fixedBtn, JLayeredPane.PALETTE_LAYER);
+        SingleColorIconButton cfgBtn = createBtn("setting.png", (btn, e) -> {
+            setting = !setting;
+            btn.setSelected(setting);
+            this.repaint();
+        });
+        cfgBtn.setSelectedIcon(new SingleColorIcon("setting.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
+
+        leftBtns.add(cfgBtn);
+        leftBtns.add(fixedBtn);
+        for (int i = 0; i < leftBtns.size(); i++) {
+            this.add(leftBtns.get(i), JLayeredPane.PALETTE_LAYER);
+        }
     }
 
     private SingleColorIconButton createBtn(String icon, BiConsumer<SingleColorIconButton, ActionEvent> l) {
@@ -99,7 +107,7 @@ public class UMLTitle extends JLayeredPane implements DMouseListener, DComponent
     }
 
     public void setButtonRolloverBackgroupColor(Color rolloverBackgroupColor) {
-        for (SingleColorIconButton c : this.btns) {
+        for (SingleColorIconButton c : this.rightBtns) {
             c.setRolloverBackgroupColor(rolloverBackgroupColor);
         }
     }
@@ -155,9 +163,14 @@ public class UMLTitle extends JLayeredPane implements DMouseListener, DComponent
     @Override
     public void componentResized(ComponentEvent e) {
         fieldPanel.setBounds(0, 0, e.getComponent().getWidth(), e.getComponent().getHeight());
-        for (int i = btns.size(); i > 0; i--) {
-            btns.get(btns.size() - i).setBounds(e.getComponent().getWidth() - SIZE * i, 0, SIZE, SIZE);
+        for (int i = rightBtns.size(); i > 0; i--) {
+            rightBtns.get(rightBtns.size() - i).setBounds(e.getComponent().getWidth() - SIZE * i, 0, SIZE, SIZE);
         }
+
+        for (int i = 0; i < leftBtns.size(); i++) {
+            leftBtns.get(i).setBounds(5 + i * SIZE, 0, SIZE, SIZE);
+        }
+
     }
 
 }
