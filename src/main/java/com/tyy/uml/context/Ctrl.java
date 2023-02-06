@@ -1,11 +1,10 @@
 package com.tyy.uml.context;
 
-import com.tyy.uml.bean.UMLProjectData;
 import com.tyy.uml.bean.UMLProject;
-import com.tyy.uml.canvas.UMLScrollHelper;
+import com.tyy.uml.bean.UMLProjectData;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
-import com.tyy.uml.gui.editor.UMLEditor;
-import com.tyy.uml.gui.info.UMLInfoPanel;
+import com.tyy.uml.gui.canvas.UMLInfoPanel;
+import com.tyy.uml.gui.canvas.UMLScrollHelper;
 
 public interface Ctrl extends DKeyListener {
 
@@ -15,18 +14,24 @@ public interface Ctrl extends DKeyListener {
 
     UMLProjectData loadProject(UMLProject project, boolean peek);
 
+    UMLProjectData getCurProject();
+
     UMLProjectData saveProject(UMLProjectData project);
 
     void refreshProject();
 
     UMLScrollHelper getScrollHelper();
 
-    UMLEditor setEditorContent(UMLInfoPanel info);
+    void setEditorContentCenter();
+
+    void showEditor(UMLInfoPanel info);
 
     void hideEditor();
 
     void toggleEditorList();
 
     UMLGUIConfig getCfg();
+
+    void showSettings(boolean setting);
 
 }

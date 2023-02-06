@@ -51,7 +51,7 @@ public class Group extends AbsMovable {
     }
 
     public void selectItem(GroupItem item, MouseEvent e) {
-        if (!e.isControlDown()) {
+        if (e == null || !e.isControlDown()) {
             items.forEach(i -> {
                 if (item != i) {
                     i.unselect();

@@ -1,4 +1,4 @@
-package com.tyy.uml.canvas;
+package com.tyy.uml.gui.canvas;
 
 import java.awt.Color;
 
@@ -8,7 +8,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.tyy.uml.gui.comm.UmlScrollBarUI;
-import com.tyy.uml.gui.info.UMLInfoPanel;
 import com.tyy.uml.util.SWUtils;
 
 public class UMLScrollHelper {

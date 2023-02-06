@@ -1,13 +1,10 @@
-package com.tyy.uml.gui.editor;
+package com.tyy.uml.gui.op.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
 import java.util.Observable;
 
-import javax.swing.BoxLayout;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -15,28 +12,22 @@ import javax.swing.event.DocumentEvent;
 
 import com.tyy.uml.bean.BeanHelper.BeanObservale;
 import com.tyy.uml.bean.BeanHelper.BeanObserver;
+import com.tyy.uml.bean.UMLModel;
+import com.tyy.uml.bean.UMLModelParser;
 import com.tyy.uml.context.Ctrl;
 import com.tyy.uml.context.UMLGUIConfig;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DDocumentListener;
-import com.tyy.uml.gui.info.UMLInfoPanel;
-import com.tyy.uml.bean.UMLModel;
-import com.tyy.uml.bean.UMLModelParser;
+import com.tyy.uml.gui.canvas.UMLInfoPanel;
+import com.tyy.uml.gui.op.AbsUMLOperateMain;
+import com.tyy.uml.gui.op.UMLOperatePanel;
 import com.tyy.uml.util.SWUtils;
 
-public class UMLEditor extends JPanel implements BeanObserver, DComponentListener, DDocumentListener {
+public class UMLEditor extends AbsUMLOperateMain implements BeanObserver, DComponentListener, DDocumentListener {
 
     private static final long serialVersionUID = 1L;
 
-    static final int fixedWidth = 500;
-
-    static final int fixedHeight = 300;
-
-    UMLList umlList;
-
-    UMLEditorTitle umlTitle;
-
-    JPanel content;
+    UMLInfoList umlList;
 
     JEditorPane editorPane = new JEditorPane();
 
@@ -46,35 +37,32 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
 
     UMLInfoPanel umlInfoPanel;
 
-    private Ctrl ctrl;
-
-    public UMLEditor(Ctrl ctrl) {
-        this.ctrl = ctrl;
-        this.setBorder(new EmptyBorder(0, 0, 0, 0));
-        this.setLayout(new BorderLayout());
-
-        this.umlTitle = new UMLEditorTitle(ctrl, this);
-        this.add(umlTitle, BorderLayout.NORTH);
-        this.umlList = new UMLList();
-        this.add(umlList, BorderLayout.WEST);
-        umlList.setVisible(false);
+    public UMLEditor(Ctrl ctrl, UMLOperatePanel operatePanel) {
+        super(ctrl, operatePanel);
+        this.initUMLInfos();
         this.initEditorPanel();
-        this.setCenter();
+        this.initUMLConfig();
+    }
+
+    private void initUMLInfos() {
+        this.umlList = new UMLInfoList();
+        this.umlList.setVisible(false);
+        this.add(umlList, BorderLayout.WEST);
+        this.umlList.addKeyListener(ctrl);
+    }
+
+    private void initUMLConfig() {
+        this.rltEditor.addKeyListener(ctrl);
+        this.add(rltEditor, BorderLayout.EAST);
     }
 
     private void initEditorPanel() {
-        SWUtils.optimize(content = new JPanel());
-        editorPane.setPreferredSize(new Dimension(300, fixedHeight));
+        editorPane.setPreferredSize(new Dimension(300, UMLOperatePanel.fixedHeight));
         editorPane.getDocument().addDocumentListener(this);
         editorPane.setBorder(new EmptyBorder(5, 10, 0, 5));
 
-        content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
-        content.add(editorPane);
-        content.add(rltEditor);
         this.editorPane.addKeyListener(ctrl);
-        this.rltEditor.addKeyListener(ctrl);
-        this.umlList.addKeyListener(ctrl);
-        this.add(content, BorderLayout.CENTER);
+        this.add(editorPane, BorderLayout.CENTER);
     }
 
     public void refreshConfig(UMLGUIConfig cfg) {
@@ -93,32 +81,25 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
         }
     }
 
-    private void updateConfig(UMLGUIConfig cfg, String prop, Object newValue) {
+    public void updateConfig(UMLGUIConfig cfg, String prop, Object newValue) {
         if (prop == null || "editorBackColor".equals(prop)) {
             Color backColor = SWUtils.decodeColor(ctrl.getCfg().getEditorBackColor(), UMLGUIConfig.c252526);
             setBackground(backColor);
             editorPane.setBackground(backColor);
             rltEditor.setBackground(backColor);
-            content.setBackground(backColor);
-        }
-        if (prop == null || "editorTitleBackColor".equals(prop)) {
-            Color backColor = SWUtils.decodeColor(ctrl.getCfg().getEditorTitleBackColor(), UMLGUIConfig.c333333);
-            umlTitle.setBackground(backColor);
         }
         if (prop == null || "editorFontColor".equals(prop)) {
             Color fontColor = SWUtils.decodeColor(ctrl.getCfg().getEditorFontColor(), UMLGUIConfig.cd4d4d4);
             editorPane.setForeground(fontColor);
-            umlTitle.setForeground(fontColor);
         }
         if (prop == null || "editorCaretColor".equals(prop)) {
             editorPane.setCaretColor(SWUtils.decodeColor(ctrl.getCfg().getEditorCaretColor(), UMLGUIConfig.caeafad));
         }
-
     }
 
     private void updateModel(UMLModel model, String prop, Object newValue) {
         if (prop == null || "className".equals(prop) || "classDesc".equals(prop)) {
-            umlTitle.setTitle(UMLModelParser.toClassTitle(this.model));
+            setTitle(UMLModelParser.toClassTitle(this.model));
         }
     }
 
@@ -141,7 +122,7 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
         ((BeanObservale) newModel).addObserver(this);
         this.model = newModel;
         this.editorPane.setText(this.model.getUmlString());
-        this.umlTitle.setTitle(UMLModelParser.toClassTitle(this.model));
+        setTitle(UMLModelParser.toClassTitle(this.model));
         this.rltEditor.refresModel(this.model);
     }
 
@@ -149,24 +130,6 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
     public void changed(DocumentEvent e, String newValue) {
         model.setUmlString(newValue);
         UMLModelParser.parser(newValue, model);
-    }
-
-    private void setCenter() {
-        if (this.getParent() != null) {
-            Container parent = this.getParent();
-            int x = (parent.getWidth() - fixedWidth) / 2;
-            x = x < 0 ? 0 : x;
-            int y = (parent.getHeight() - fixedHeight) - 20;
-            y = y < 0 ? 0 : y;
-            this.setBounds(x, y, fixedWidth, fixedHeight);
-            this.repaint();
-            this.getParent().repaint();
-        }
-    }
-
-    @Override
-    public void componentResized(ComponentEvent e) {
-        setCenter();
     }
 
     public UMLModel getModel() {
@@ -177,6 +140,8 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
         return umlInfoPanel;
     }
 
+   
+
     public static class UMLRltEditor extends JPanel {
 
         private static final long serialVersionUID = 1L;
@@ -186,7 +151,7 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
         private UMLEditor editor;
 
         public UMLRltEditor(UMLEditor editor) {
-            this.setPreferredSize(new Dimension(300, UMLEditor.fixedHeight));
+            this.setPreferredSize(new Dimension(300, UMLOperatePanel.fixedHeight));
             this.setBorder(new EmptyBorder(0, 0, 0, 0));
         }
 
@@ -203,6 +168,7 @@ public class UMLEditor extends JPanel implements BeanObserver, DComponentListene
         } else {
             umlList.setVisible(false);
         }
+        refreshSize();
     }
 
 }

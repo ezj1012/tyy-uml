@@ -1,4 +1,4 @@
-package com.tyy.uml.gui.info;
+package com.tyy.uml.gui.canvas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -160,7 +160,7 @@ public class UMLInfoPanel extends GroupItem implements BeanObserver {
 
     @Override
     public void mouseDblClicked(MouseEvent e, int c) {
-        this.ctrl.setEditorContent(this);
+        this.ctrl.showEditor(this);
     }
 
     public static class UMLFieldsPanel extends JPanel {

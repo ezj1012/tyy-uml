@@ -1,4 +1,4 @@
-package com.tyy.uml.gui.ctrl;
+package com.tyy.uml.gui.frame;
 
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
@@ -17,60 +17,73 @@ import com.tyy.uml.bean.UMLModel;
 import com.tyy.uml.bean.UMLProject;
 import com.tyy.uml.bean.UMLProjectData;
 import com.tyy.uml.bean.UMLWork;
-import com.tyy.uml.canvas.UMLCanvas;
-import com.tyy.uml.canvas.UMLScrollHelper;
 import com.tyy.uml.context.Ctrl;
 import com.tyy.uml.context.UMLContext;
 import com.tyy.uml.context.UMLGUIConfig;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
+import com.tyy.uml.gui.canvas.UMLCanvas;
+import com.tyy.uml.gui.canvas.UMLInfoPanel;
+import com.tyy.uml.gui.canvas.UMLScrollHelper;
 import com.tyy.uml.gui.comm.group.GroupItem;
-import com.tyy.uml.gui.editor.UMLEditor;
-import com.tyy.uml.gui.editor.UMLSettings;
-import com.tyy.uml.gui.frame.UMLFrame;
-import com.tyy.uml.gui.info.UMLInfoPanel;
+import com.tyy.uml.gui.op.UMLOperatePanel;
+import com.tyy.uml.gui.op.editor.UMLEditor;
+import com.tyy.uml.gui.op.setting.UMLSettings;
 import com.tyy.uml.util.SystemUtils;
 
-public class UMLControllerPane extends JLayeredPane implements DComponentListener, Ctrl, DKeyListener {
+public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctrl, DKeyListener {
 
     private static final long serialVersionUID = 1L;
 
     UMLFrame frame;
 
-    UMLCanvas umlPanel;
+    UMLCanvas canvasPanel;
 
     UMLScrollHelper umlScorllPanel;
 
+    UMLOperatePanel operatePanel;
+
     UMLEditor editor;
+
+    UMLSettings settings;
 
     UMLWork workConfig;
 
     UMLProjectData projectData;
 
-    public UMLControllerPane(UMLFrame frame, UMLWork workConfig) {
+    public UMLMainPane(UMLFrame frame, UMLWork workConfig) {
         this.frame = frame;
         this.workConfig = workConfig;
         if (workConfig.getProjects().size() == 0) {
             createProject(new UMLProject("", randFile()));
         }
         loadProject(workConfig.getProjects().get(0), false);
+        initCanvas();
+        initOperatePanel();
+
+        //
         this.setPreferredSize(new Dimension(workConfig.getConfig().getFrameWidth(), workConfig.getConfig().getFrameHeight()));
-        umlPanel = new UMLCanvas(this);
-        editor = new UMLEditor(this);
-        this.addComponentListener(this);
-        this.addComponentListener(editor);
-        // this.openProject(config);
-        initScorll();
-        this.add(editor, JLayeredPane.PALETTE_LAYER);
         this.addKeyListener(this);
-        umlPanel.addKeyListener(this);
-        editor.addKeyListener(this);
-        editor.setVisible(false);
+        this.addComponentListener(this);
+
         this.refreshProject();
     }
 
-    public void initScorll() {
-        umlScorllPanel = new UMLScrollHelper(umlPanel);
+    public void initOperatePanel() {
+        operatePanel = new UMLOperatePanel(this);
+        this.addComponentListener(operatePanel);
+        this.add(operatePanel, JLayeredPane.PALETTE_LAYER);
+        operatePanel.addKeyListener(this);
+        operatePanel.setVisible(false);
+
+        this.editor = new UMLEditor(this, operatePanel);
+        this.settings = new UMLSettings(this, operatePanel, workConfig);
+    }
+
+    public void initCanvas() {
+        canvasPanel = new UMLCanvas(this);
+        canvasPanel.addKeyListener(this);
+        umlScorllPanel = new UMLScrollHelper(canvasPanel);
         this.add(umlScorllPanel.getUmlScorllPanel(), JLayeredPane.DEFAULT_LAYER);
     }
 
@@ -135,8 +148,8 @@ public class UMLControllerPane extends JLayeredPane implements DComponentListene
 
         if (projectData == project) {
             models.clear();
-            if (this.umlPanel != null) {
-                for (GroupItem groupItem : this.umlPanel.getItems()) {
+            if (this.canvasPanel != null) {
+                for (GroupItem groupItem : this.canvasPanel.getItems()) {
                     if (groupItem instanceof UMLInfoPanel) {
                         UMLModel model = ((UMLInfoPanel) groupItem).getModel();
                         models.add(model);
@@ -165,15 +178,17 @@ public class UMLControllerPane extends JLayeredPane implements DComponentListene
     public void refreshProject() {
         List<UMLModel> models = new ArrayList<>();
         models.addAll(projectData.getModels());
-        umlPanel.refreshModels(models);
-        umlPanel.refreshConfig(projectData.getConfig());
+        canvasPanel.refreshModels(models);
+        canvasPanel.refreshConfig(projectData.getConfig());
+        operatePanel.refreshConfig(projectData.getConfig());
         editor.refreshConfig(projectData.getConfig());
+        settings.refreshConfig(projectData.getConfig());
     }
 
     @Override
     public void componentResized(ComponentEvent e) {
         umlScorllPanel.setSize(e.getComponent().getWidth(), e.getComponent().getHeight());
-        umlPanel.setCenter();
+        canvasPanel.setCenter();
     }
 
     @Override
@@ -183,62 +198,57 @@ public class UMLControllerPane extends JLayeredPane implements DComponentListene
         }
     }
 
-    public UMLEditor setEditorContent(UMLInfoPanel info) {
-        editor.setVisible(true);
-        editor.setModel(info);
-        umlPanel.setCenter(info);
+    @Override
+    public void showSettings(boolean setting) {
+        if (setting) {
+            this.settings.showMe();
+            this.settings.refresh();
+        } else if (this.editor.getUmlInfoPanel() != null) {
+            this.editor.showMe();
+        } else {
+            UMLInfoPanel selected = null;
+            List<GroupItem> items = this.canvasPanel.getItems();
+            if (items.isEmpty()) {
+                UMLInfoPanel info = new UMLInfoPanel(this, null, this.canvasPanel.getWidth() / 2, this.canvasPanel.getHeight() / 2);
+                this.canvasPanel.create(info);
+            }
+            for (GroupItem groupItem : items) {
+                if (groupItem.isSelected()) {
+                    selected = (UMLInfoPanel) groupItem;
+                    break;
+                }
+            }
+            if (selected == null && !items.isEmpty()) {
+                this.canvasPanel.selectItem(items.get(0), null);
+                selected = (UMLInfoPanel) items.get(0);
+            }
+            showEditor(selected);
+        }
         this.revalidate();
         this.repaint();
-        return editor;
+    }
+
+    @Override
+    public void showEditor(UMLInfoPanel info) {
+        canvasPanel.setCenter(info);
+        this.editor.setModel(info);
+        this.editor.showMe();
+        this.revalidate();
+        this.repaint();
     }
 
     public void hideEditor() {
-        // this.remove(editor);
-        this.editor.setVisible(false);
+        this.operatePanel.setVisible(false);
     }
-
-    // @Override
-    // public UMLProjectData loadDatas(File configFile) {
-    // models.clear();
-    // UMLProjectData saveData = null;
-    // try (FileInputStream fis = new FileInputStream(configFile)) {
-    // String string = IoUtil.read(fis, Charset.forName("UTF-8"));
-    // saveData = JSON.parseObject(string, UMLProjectData.class);
-    // if (saveData.getConfig() == null) {
-    // saveData.setConfig(new UMLGUIConfig());
-    // }
-    // if (saveData.getModels() == null) {
-    // saveData.setModels(new ArrayList<>());
-    // }
-    // } catch (Exception e) {
-    // saveData = saveDatas(configFile);
-    // }
-    // if (this.config != null && this.config instanceof BeanObservale) {
-    // ((BeanObservale) this.config).deleteObservers();
-    // }
-    // this.config = BeanHelper.proxy(saveData.getConfig());
-    // models.addAll(saveData.getModels());
-    //
-    // return new UMLProjectData(this.config, saveData.getModels());
-    // }
-
-    // @Override
-    // public UMLProjectData saveDatas(File file) {
-    // UMLProjectData saveData = getSaveData();
-    // if (!configFile.exists()) {
-    // configFile.getParentFile().mkdirs();
-    // }
-    // try (FileOutputStream fis = new FileOutputStream(configFile)) {
-    // IoUtil.write(fis, true, JSON.toJSONString(saveData, com.alibaba.fastjson2.JSONWriter.Feature.PrettyFormat).getBytes(Charset.forName("UTF-8")));
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // return saveData;
-    // }
 
     @Override
     public UMLGUIConfig getCfg() {
         return projectData.getConfig();
+    }
+
+    @Override
+    public UMLProjectData getCurProject() {
+        return projectData;
     }
 
     @Override
@@ -247,9 +257,13 @@ public class UMLControllerPane extends JLayeredPane implements DComponentListene
     }
 
     @Override
+    public void setEditorContentCenter() {
+        getScrollHelper().setCenter(this.editor.getUmlInfoPanel());
+    }
+
+    @Override
     public void toggleEditorList() {
         this.editor.toggleEditorList();
-
     }
 
 }

@@ -1,4 +1,4 @@
-package com.tyy.uml.canvas;
+package com.tyy.uml.gui.canvas;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,7 +13,6 @@ import com.tyy.uml.bean.BeanHelper.BeanObserver;
 import com.tyy.uml.context.Ctrl;
 import com.tyy.uml.context.UMLGUIConfig;
 import com.tyy.uml.gui.comm.group.Group;
-import com.tyy.uml.gui.info.UMLInfoPanel;
 import com.tyy.uml.bean.UMLModel;
 import com.tyy.uml.util.SWUtils;
 
@@ -61,8 +60,16 @@ public class UMLCanvas extends Group implements BeanObserver {
     @Override
     public void mouseDblClicked(MouseEvent e, int c) {
         UMLInfoPanel classDes = new UMLInfoPanel(ctrl, null, e.getX(), e.getY());
-        this.add(classDes);
-        this.selectItem(classDes, e);
+        create(classDes, e);
+    }
+
+    public void create(UMLInfoPanel info) {
+        create(info, null);
+    }
+
+    public void create(UMLInfoPanel info, MouseEvent e) {
+        this.add(info);
+        this.selectItem(info, e);
         this.repaint();
     }
 

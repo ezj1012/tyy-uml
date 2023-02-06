@@ -1,4 +1,4 @@
-package com.tyy.uml.gui.editor;
+package com.tyy.uml.gui.op;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -22,7 +22,7 @@ import com.tyy.uml.gui.comm.SingleColorIconButton;
 import com.tyy.uml.gui.comm.TitleLabelPanel;
 import com.tyy.uml.util.SWUtils;
 
-public class UMLEditorTitle extends JLayeredPane implements DMouseListener, DComponentListener {
+public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DComponentListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,7 +38,7 @@ public class UMLEditorTitle extends JLayeredPane implements DMouseListener, DCom
 
     Ctrl ctrl;
 
-    UMLEditor editor;
+    // UMLEditor editor;
 
     List<SingleColorIconButton> rightBtns = new ArrayList<>();
 
@@ -46,10 +46,11 @@ public class UMLEditorTitle extends JLayeredPane implements DMouseListener, DCom
 
     TitleLabelPanel fieldPanel;
 
-    public UMLEditorTitle(Ctrl ctrl, UMLEditor editor) {
+    public UMLOperateTitle(Ctrl ctrl) {
+        // public UMLEditorTitle(Ctrl ctrl, UMLEditor editor) {
         this.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.ctrl = ctrl;
-        this.editor = editor;
+        // this.editor = editor;
         SWUtils.fixedHeight(this, SIZE);
         this.initCentent();
         this.initBtn();
@@ -61,7 +62,7 @@ public class UMLEditorTitle extends JLayeredPane implements DMouseListener, DCom
     }
 
     private void initBtn() {
-        rightBtns.add(createBtn("view.png", (btn, e) -> this.ctrl.getScrollHelper().setCenter(editor.getUmlInfoPanel())));
+        rightBtns.add(createBtn("view.png", (btn, e) -> this.ctrl.setEditorContentCenter()));
         rightBtns.add(createBtn("list.png", (btn, e) -> this.ctrl.toggleEditorList()));
         rightBtns.add(createBtn("close.png", (btn, e) -> this.ctrl.hideEditor()));
         for (int i = rightBtns.size(); i > 0; i--) {
@@ -78,6 +79,7 @@ public class UMLEditorTitle extends JLayeredPane implements DMouseListener, DCom
         SingleColorIconButton cfgBtn = createBtn("setting.png", (btn, e) -> {
             setting = !setting;
             btn.setSelected(setting);
+            ctrl.showSettings(setting);
             this.repaint();
         });
         cfgBtn.setSelectedIcon(new SingleColorIcon("setting.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
@@ -153,10 +155,10 @@ public class UMLEditorTitle extends JLayeredPane implements DMouseListener, DCom
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!fixedPos && editor != null) {
-            int x = this.editor.getX() + e.getX() - pressedX;
-            int y = this.editor.getY() + e.getY() - pressedY;
-            this.editor.setLocation(x, y);
+        if (!fixedPos && this.getParent() != null) {
+            int x = this.getParent().getX() + e.getX() - pressedX;
+            int y = this.getParent().getY() + e.getY() - pressedY;
+            this.getParent().setLocation(x, y);
         }
     }
 
