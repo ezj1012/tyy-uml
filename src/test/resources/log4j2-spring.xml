@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="off" monitorInterval="120">
+    <!-- 用来定义全局变量,利用${}来使用变量 -->
+    <properties>
+        <!-- 定义日志文件的存储地址 -->
+        <property name="LOG_HOME">logs</property>
+        <!-- 定义日志内容的输出格式 -->
+        <property name="pattern"
+            value="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} --> %m %n" />
+    </properties>
+
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}" />
+        </Console>
+        <!-- 一般日志输出 -->
+        <RollingRandomAccessFile
+            name="infoAdapter" fileName="${LOG_HOME}/project-i.log"
+            filePattern="${LOG_HOME}/$${date:yyyy-MM}/project-i-%d{yyyy-MM-dd}-%i.log">
+            <Filters>
+                <ThresholdFilter level="INFO"
+                    onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <PatternLayout pattern="${pattern}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy
+                    interval="1" />
+                <SizeBasedTriggeringPolicy
+                    size="10MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="100" />
+        </RollingRandomAccessFile>
+        <!-- 异常日志输出 -->
+        <RollingRandomAccessFile
+            name="errorAdapter" fileName="${LOG_HOME}/project-e.log"
+            filePattern="${LOG_HOME}/$${date:yyyy-MM}/project-e-%d{yyyy-MM-dd}-%i.log">
+            <Filters>
+                <ThresholdFilter level="ERROR"
+                    onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <PatternLayout pattern="${pattern}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy
+                    interval="1" />
+                <SizeBasedTriggeringPolicy
+                    size="10MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="100" />
+        </RollingRandomAccessFile>
+    </appenders>
+
+    <loggers>
+        <Root level="info">
+            <appender-ref ref="Console" />
+            <appender-ref ref="infoAdapter" />
+            <appender-ref ref="errorAdapter" />
+        </Root>
+    </loggers>
+
+</configuration>

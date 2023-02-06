@@ -7,8 +7,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.comm.UmlScrollBarUI;
-import com.tyy.uml.info.UMLInfoPanel;
+import com.tyy.uml.gui.comm.UmlScrollBarUI;
+import com.tyy.uml.gui.info.UMLInfoPanel;
 import com.tyy.uml.util.SWUtils;
 
 public class UMLScrollHelper {

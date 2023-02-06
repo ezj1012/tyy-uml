@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tyy.uml.context.UMLGUIConfig;
 import com.tyy.uml.util.SWUtils;
 
 import lombok.Data;
@@ -37,10 +38,10 @@ public class UMLModel {
 
     public UMLModel() {
         this.umlString = "";
-        this.backColor = SWUtils.toHex(UMLConfig.c1e1e1e);
+        this.backColor = SWUtils.toHex(UMLGUIConfig.c1e1e1e);
         this.borderColor = SWUtils.toHex(Color.BLACK);
-        this.classColor = SWUtils.toHex(UMLConfig.cd4d4d4);
-        this.fieldColor = SWUtils.toHex(UMLConfig.cd4d4d4);
+        this.classColor = SWUtils.toHex(UMLGUIConfig.cd4d4d4);
+        this.fieldColor = SWUtils.toHex(UMLGUIConfig.cd4d4d4);
     }
 
 }

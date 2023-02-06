@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import com.tyy.uml.bean.UMLConfig;
-import com.tyy.uml.bean.UMLModel;
 import com.tyy.uml.bean.BeanHelper.BeanObservale;
 import com.tyy.uml.bean.BeanHelper.BeanObserver;
-import com.tyy.uml.group.Group;
-import com.tyy.uml.info.UMLInfoPanel;
-import com.tyy.uml.main.Ctrl;
+import com.tyy.uml.context.Ctrl;
+import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.gui.comm.group.Group;
+import com.tyy.uml.gui.info.UMLInfoPanel;
+import com.tyy.uml.bean.UMLModel;
 import com.tyy.uml.util.SWUtils;
 
 public class UMLCanvas extends Group implements BeanObserver {
@@ -29,7 +29,7 @@ public class UMLCanvas extends Group implements BeanObserver {
         this.ctrl = ctrl;
         setLayout(null);
 
-        UMLConfig cfg = this.ctrl.getCfg();
+        UMLGUIConfig cfg = this.ctrl.getCfg();
         setBounds(0, 0, cfg.getCanvasWidth(), cfg.getCanvasHeight());
         setPreferredSize(new Dimension(cfg.getCanvasWidth(), cfg.getCanvasHeight()));
         setCenter();
@@ -66,34 +66,34 @@ public class UMLCanvas extends Group implements BeanObserver {
         this.repaint();
     }
 
-    public void refreshConfig(UMLConfig cfg) {
+    public void refreshConfig(UMLGUIConfig cfg) {
         if (cfg instanceof BeanObservale) {
             ((BeanObservale) cfg).addObserver(this);
         }
         updateConfig(cfg, null, null);
     }
 
-    private void updateConfig(UMLConfig cfg, String prop, Object newValue) {
+    private void updateConfig(UMLGUIConfig cfg, String prop, Object newValue) {
         if (prop == null || "canvasBackColor".equals(prop)) {
-            Color backColor = SWUtils.decodeColor(ctrl.getCfg().getCanvasBackColor(), UMLConfig.c252526);
+            Color backColor = SWUtils.decodeColor(ctrl.getCfg().getCanvasBackColor(), UMLGUIConfig.c252526);
             setBackground(backColor);
             this.scrollHelper.setBackground(backColor);
         }
         if (prop == null || "canvasThumbColor".equals(prop)) {
-            this.scrollHelper.setThumbColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbColor(), UMLConfig.c424242));
+            this.scrollHelper.setThumbColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbColor(), UMLGUIConfig.c424242));
         }
         if (prop == null || "canvasThumbRolloverColor".equals(prop)) {
-            this.scrollHelper.setThumbRolloverColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbRolloverColor(), UMLConfig.c4F4F4F));
+            this.scrollHelper.setThumbRolloverColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbRolloverColor(), UMLGUIConfig.c4F4F4F));
         }
         if (prop == null || "canvasThumbDraggingColor".equals(prop)) {
-            this.scrollHelper.setThumbDraggingColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbDraggingColor(), UMLConfig.c5E5E5E));
+            this.scrollHelper.setThumbDraggingColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbDraggingColor(), UMLGUIConfig.c5E5E5E));
         }
     }
 
     @Override
     public void update(Observable o, Object source, String prop, Object oldValue, Object newValue) {
-        if (source instanceof UMLConfig) {
-            updateConfig((UMLConfig) source, prop, newValue);
+        if (source instanceof UMLGUIConfig) {
+            updateConfig((UMLGUIConfig) source, prop, newValue);
         }
     }
 
