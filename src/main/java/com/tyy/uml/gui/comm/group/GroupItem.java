@@ -30,8 +30,10 @@ public class GroupItem extends AbsMovable {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        super.mousePressed(e);
-        group.selectItem(this, e);
+        if (group != null) {
+            super.mousePressed(e);
+            group.selectItem(this, e);
+        }
     }
 
     public void unselect() {

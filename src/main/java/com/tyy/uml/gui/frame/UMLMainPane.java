@@ -98,6 +98,9 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         this.saveConfigs();
         UMLProjectData converBean = SystemUtils.converBean(project, UMLProjectData.class);
         saveProject(converBean);
+        if (this.settings != null) {
+            this.settings.refresh();
+        }
     }
 
     @Override
@@ -203,6 +206,7 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         if (setting) {
             this.settings.showMe();
             this.settings.refresh();
+            this.settings.requestFocus();
         } else if (this.editor.getUmlInfoPanel() != null) {
             this.editor.showMe();
         } else {
@@ -263,7 +267,12 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
 
     @Override
     public void toggleEditorList() {
-        this.editor.toggleEditorList();
+        if (this.editor.isVisible()) {
+            this.editor.toggleEditorList();
+        }
+        if (this.settings.isVisible()) {
+            this.settings.toggleEditorList();
+        }
     }
 
 }

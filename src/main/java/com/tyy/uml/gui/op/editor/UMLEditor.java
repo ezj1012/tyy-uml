@@ -140,8 +140,6 @@ public class UMLEditor extends AbsUMLOperateMain implements BeanObserver, DCompo
         return umlInfoPanel;
     }
 
-   
-
     public static class UMLRltEditor extends JPanel {
 
         private static final long serialVersionUID = 1L;

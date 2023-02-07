@@ -3,6 +3,7 @@ package com.tyy.uml.gui.comm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -11,9 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.util.SWUtils;
 
-public class TitleLabelPanel extends JPanel {
+public class TitleLabelPanel extends JPanel implements DComponentListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,6 +27,15 @@ public class TitleLabelPanel extends JPanel {
         showField = createLabel(12, Font.PLAIN, Color.BLACK, 0, 5, 0, 0);
         this.add(showField, BorderLayout.CENTER);
         SWUtils.fixedHeight(this, 16);
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        SWUtils.printSize("333", e.getComponent());
+        System.out.println(this.showField.getText() + " " + this.showField.getForeground());
+        SWUtils.fixed(this.showField, e.getComponent().getWidth(), e.getComponent().getHeight());
+        this.showField.revalidate();
+        this.showField.repaint();
     }
 
     public TitleLabelPanel(int fixedHeight, Color fontColor) {
@@ -63,6 +74,10 @@ public class TitleLabelPanel extends JPanel {
 
     public void setText(String text) {
         showField.setText(text);
+    }
+
+    public String getText() {
+        return showField.getText();
     }
 
     public void setFont(int style, int size) {

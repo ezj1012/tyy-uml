@@ -9,8 +9,9 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import com.tyy.uml.bean.UMLWork;
 import com.tyy.uml.core.gui.frame.TitleBar;
 import com.tyy.uml.core.gui.frame.Tray;
-import com.tyy.uml.gui.frame.UMLMainPane;
+import com.tyy.uml.exception.ServiceException;
 import com.tyy.uml.gui.frame.UMLFrame;
+import com.tyy.uml.gui.frame.UMLMainPane;
 import com.tyy.uml.util.SystemUtils;
 
 public class UMLContext {
@@ -102,6 +103,10 @@ public class UMLContext {
 
     public ConfigurableApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+
+    public void throwEx(ServiceException e) {
+        System.err.println(e.getMessage());
     }
 
 }

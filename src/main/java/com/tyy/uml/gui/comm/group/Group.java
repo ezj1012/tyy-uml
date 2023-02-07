@@ -18,8 +18,8 @@ public class Group extends AbsMovable {
     protected List<GroupSelectListener> selectListeners = new ArrayList<>();
 
     public void replace(List<? extends GroupItem> newItems) {
-        for (GroupItem groupItem : items) {
-            this.remove(groupItem);
+        for (int i = 0; i < items.size();) {
+            this.remove(items.get(i));
         }
         for (GroupItem groupItem : newItems) {
             this.add(groupItem);

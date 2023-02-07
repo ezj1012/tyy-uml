@@ -62,13 +62,6 @@ public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DCo
     }
 
     private void initBtn() {
-        rightBtns.add(createBtn("view.png", (btn, e) -> this.ctrl.setEditorContentCenter()));
-        rightBtns.add(createBtn("list.png", (btn, e) -> this.ctrl.toggleEditorList()));
-        rightBtns.add(createBtn("close.png", (btn, e) -> this.ctrl.hideEditor()));
-        for (int i = rightBtns.size(); i > 0; i--) {
-            rightBtns.get(i - 1).setBounds(getWidth() - SIZE * i, 0, SIZE, SIZE);
-            this.add(rightBtns.get(i - 1), JLayeredPane.PALETTE_LAYER);
-        }
 
         SingleColorIconButton fixedBtn = createBtn("unlock.png", (btn, e) -> {
             fixedPos = !fixedPos;
@@ -76,19 +69,31 @@ public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DCo
             this.repaint();
         });
         fixedBtn.setSelectedIcon(new SingleColorIcon("lock.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
-        SingleColorIconButton cfgBtn = createBtn("setting.png", (btn, e) -> {
+        SingleColorIconButton settingBtn = createBtn("setting.png", (btn, e) -> {
             setting = !setting;
             btn.setSelected(setting);
             ctrl.showSettings(setting);
             this.repaint();
         });
-        cfgBtn.setSelectedIcon(new SingleColorIcon("setting.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
+        settingBtn.setSelectedIcon(new SingleColorIcon("setting.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
 
-        leftBtns.add(cfgBtn);
+        leftBtns.add(settingBtn);
         leftBtns.add(fixedBtn);
         for (int i = 0; i < leftBtns.size(); i++) {
             this.add(leftBtns.get(i), JLayeredPane.PALETTE_LAYER);
         }
+
+        rightBtns.add(createBtn("view.png", (btn, e) -> this.ctrl.setEditorContentCenter()));
+        rightBtns.add(createBtn("list.png", (btn, e) -> this.ctrl.toggleEditorList()));
+        rightBtns.add(createBtn("close.png", (btn, e) -> {
+            this.ctrl.hideEditor();
+            settingBtn.setSelected(setting = false);
+        }));
+        for (int i = rightBtns.size(); i > 0; i--) {
+            rightBtns.get(i - 1).setBounds(getWidth() - SIZE * i, 0, SIZE, SIZE);
+            this.add(rightBtns.get(i - 1), JLayeredPane.PALETTE_LAYER);
+        }
+
     }
 
     private SingleColorIconButton createBtn(String icon, BiConsumer<SingleColorIconButton, ActionEvent> l) {

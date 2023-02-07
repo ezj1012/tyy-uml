@@ -39,13 +39,7 @@ public class UMLOperatePanel extends JPanel implements BeanObserver, DComponentL
         this.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.setLayout(new BorderLayout());
         this.title = new UMLOperateTitle(ctrl);
-        // settings = new UMLSettings(ctrl);
-        // settings.setOperate(title, this);
-        // curMain = editor = new UMLEditor(ctrl);
-        // editor.setOperate(title, this);
-        // curMain.refreshSize();
         this.add(title, BorderLayout.NORTH);
-        // this.add(curMain, BorderLayout.CENTER);
     }
 
     public UMLOperateTitle getTitle() {
@@ -110,25 +104,5 @@ public class UMLOperatePanel extends JPanel implements BeanObserver, DComponentL
         this.setCenter();
         this.setVisible(true);
     }
-
-    // public void showEditor(UMLInfoPanel info) {
-    // if (curMain != editor) {
-    // this.remove(curMain);
-    // this.add(curMain = editor, BorderLayout.CENTER);
-    // }
-    // if (info != null) {
-    // editor.setModel(info);
-    // }
-    // this.setCenter();
-    // this.setVisible(true);
-    // }
-
-    // public void toggleEditorList() {
-    // curMain.toggleEditorList();
-    // }
-    //
-    // public void setEditorContentCenter() {
-    // curMain.setEditorContentCenter();
-    // }
 
 }
