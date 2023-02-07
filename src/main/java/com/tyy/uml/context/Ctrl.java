@@ -18,6 +18,8 @@ public interface Ctrl extends DKeyListener {
 
     UMLProjectData saveProject(UMLProjectData project);
 
+    void delProject(UMLProject project);
+
     void refreshProject();
 
     UMLScrollHelper getScrollHelper();

@@ -2,12 +2,13 @@ package com.tyy.uml.gui.comm;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import javax.swing.JLayeredPane;
 import javax.swing.border.EmptyBorder;
@@ -23,7 +24,7 @@ public class OperateLabelPanel extends JLayeredPane implements DComponentListene
 
     TitleLabelPanel fieldPanel;
 
-    EditorLabelPanel editorPanel;
+    // EditorLabelPanel editorPanel;
 
     List<SingleColorIconButton> rightBtns = new ArrayList<>();
 
@@ -37,43 +38,60 @@ public class OperateLabelPanel extends JLayeredPane implements DComponentListene
         SWUtils.fixedHeight(this, this.fixedHeight);
         this.initCentent(alignment);
         this.addComponentListener(this);
-        editorPanel.addFocusListener(this);
+        // editorPanel.addFocusListener(this);
+    }
+
+    public SingleColorIconButton addLeftButton(String icon, int size, BiConsumer<SingleColorIconButton, ActionEvent> l) {
+        SingleColorIconButton button = createBtn(icon, size, l);
+        addLeftButton(button);
+        return button;
+    }
+
+    public SingleColorIconButton addLeftButton(SingleColorIconButton button) {
+        this.leftBtns.add(button);
+        this.add(button, PALETTE_LAYER);
+        return button;
+    }
+
+    public SingleColorIconButton addRightButton(String icon, int size, BiConsumer<SingleColorIconButton, ActionEvent> l) {
+        SingleColorIconButton button = createBtn(icon, size, l);
+        addRightButton(button);
+        return button;
+    }
+
+    public SingleColorIconButton addRightButton(SingleColorIconButton button) {
+        this.rightBtns.add(button);
+        this.add(button, PALETTE_LAYER);
+        return button;
+    }
+
+    private SingleColorIconButton createBtn(String icon, int size, BiConsumer<SingleColorIconButton, ActionEvent> l) {
+        SingleColorIconButton button = new SingleColorIconButton(fixedHeight, fixedHeight, new SingleColorIcon(icon, size, size), new Color(133, 133, 133));
+        button.setRolloverBackgroupColor(new Color(70, 70, 70));
+        // button.setBounds(offIdx * SIZE, 0, SIZE, SIZE);
+        if (l != null) {
+            button.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    l.accept(button, e);
+                }
+
+            });
+        }
+        return button;
     }
 
     private void initCentent(int alignment) {
         fieldPanel = new TitleLabelPanel(this.fixedHeight, Color.WHITE, 0, 10, 0, 0);
-        editorPanel = new EditorLabelPanel(this.fixedHeight, Color.WHITE, 0, 10, 0, 0, true);
         fieldPanel.setFont(Font.PLAIN, this.fixedHeight - 8);
-        editorPanel.setFont(Font.PLAIN, this.fixedHeight - 8);
         setHorizontalAlignment(alignment);
-        editorPanel.setVisible(false);
         this.add(fieldPanel, JLayeredPane.DEFAULT_LAYER);
-        this.add(editorPanel, JLayeredPane.PALETTE_LAYER);
-        fieldPanel.addMouseListener(this);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // if (e.getClickCount() > 2) {
-        // fieldPanel.setVisible(false);
-        // editorPanel.setVisible(true);
-        // editorPanel.requestFocus();
-        // }
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        editorPanel.setVisible(false);
         fieldPanel.setVisible(true);
-    }
-
-    public String getNewText() {
-        return this.editorPanel.getText();
-    }
-
-    @Override
-    public synchronized void addFocusListener(FocusListener l) {
-        this.editorPanel.addFocusListener(l);
     }
 
     @Override
@@ -85,10 +103,6 @@ public class OperateLabelPanel extends JLayeredPane implements DComponentListene
         super.setBackground(bg);
     }
 
-    public void setCaretColor(Color c) {
-        editorPanel.setCaretColor(c);
-    }
-
     public void setHorizontalAlignment(int alignment) {
         fieldPanel.setHorizontalAlignment(alignment);
     }
@@ -96,33 +110,37 @@ public class OperateLabelPanel extends JLayeredPane implements DComponentListene
     public void setForeground(Color color) {
         if (fieldPanel != null) {
             fieldPanel.setForeground(color);
-            editorPanel.setForeground(color);
         }
         super.setForeground(color);
     }
 
+    public void setText(String text) {
+        fieldPanel.setText(text);
+    }
+
     public void setTitle(String title) {
-        fieldPanel.setText(title);
-        editorPanel.setText(title);
+        setText(title);
     }
 
     @Override
     public void componentResized(ComponentEvent e) {
         int w = e.getComponent().getWidth();
         int h = e.getComponent().getHeight();
-        fieldPanel.setBounds(0, 0, w, h);
-        editorPanel.setBounds(0, 0, w, h);
-        SWUtils.printSize("field", fieldPanel);
-        SWUtils.printSize(" editor", editorPanel);
-        fieldPanel.revalidate();
-        editorPanel.revalidate();
+        for (int i = 0; i < leftBtns.size(); i++) {
+            leftBtns.get(i).setBounds(5 + i * this.fixedHeight, 0, this.fixedHeight, this.fixedHeight);
+        }
         for (int i = rightBtns.size(); i > 0; i--) {
             rightBtns.get(rightBtns.size() - i).setBounds(w - this.fixedHeight * i, 0, this.fixedHeight, this.fixedHeight);
         }
 
-        for (int i = 0; i < leftBtns.size(); i++) {
-            leftBtns.get(i).setBounds(5 + i * this.fixedHeight, 0, this.fixedHeight, this.fixedHeight);
-        }
+        fieldPanel.setBounds(0, 0, w, h);
+        fieldPanel.revalidate();
+        SWUtils.printSize("field", fieldPanel);
+
+        // editorPanel.setBounds(0, 0, w, h);
+        // SWUtils.printSize(" editor", editorPanel);
+        // editorPanel.revalidate();
+        //
 
     }
 

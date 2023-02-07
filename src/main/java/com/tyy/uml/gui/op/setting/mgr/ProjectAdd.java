@@ -1,4 +1,4 @@
-package com.tyy.uml.gui.op.setting;
+package com.tyy.uml.gui.op.setting.mgr;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

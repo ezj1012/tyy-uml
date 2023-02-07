@@ -1,4 +1,4 @@
-package com.tyy.uml.gui.op.setting;
+package com.tyy.uml.gui.op.setting.mgr;
 
 import java.awt.BorderLayout;
 
@@ -29,7 +29,6 @@ public class ProjectManager extends JPanel {
         projectList = new ProjectList(ctrl, workConfig);
         add(add, BorderLayout.NORTH);
         projectList.addTo(this, BorderLayout.CENTER);
-
     }
 
     @Override

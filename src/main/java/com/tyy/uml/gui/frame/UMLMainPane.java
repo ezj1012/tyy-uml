@@ -6,7 +6,9 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.swing.JLayeredPane;
@@ -55,7 +57,7 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         this.frame = frame;
         this.workConfig = workConfig;
         if (workConfig.getProjects().size() == 0) {
-            createProject(new UMLProject("", randFile()));
+            createProject(new UMLProject("未命名", randFile()));
         }
         loadProject(workConfig.getProjects().get(0), false);
         initCanvas();
@@ -94,12 +96,37 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
 
     @Override
     public void createProject(UMLProject project) {
-        workConfig.getProjects().add(project);
-        this.saveConfigs();
         UMLProjectData converBean = SystemUtils.converBean(project, UMLProjectData.class);
         saveProject(converBean);
+        project.setPath(converBean.getPath());
+        workConfig.getProjects().add(project);
+        this.saveConfigs();
         if (this.settings != null) {
             this.settings.refresh();
+        }
+    }
+
+    @Override
+    public void delProject(UMLProject project) {
+        Iterator<UMLProject> iterator = workConfig.getProjects().iterator();
+        boolean delF = false;
+        while (iterator.hasNext()) {
+            UMLProject umlProject = iterator.next();
+            if (Objects.equals(umlProject.getPath(), project.getPath())) {
+                iterator.remove();
+                delF = true;
+                break;
+            }
+        }
+        if (delF) {
+            if (workConfig.getProjects().size() == 0) {
+                createProject(new UMLProject("未命名", randFile()));
+            }
+            saveConfigs();
+            loadProject(workConfig.getProjects().get(0), false);
+            refreshProject();
+            this.revalidate();
+            this.repaint();
         }
     }
 
@@ -186,6 +213,10 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         operatePanel.refreshConfig(projectData.getConfig());
         editor.refreshConfig(projectData.getConfig());
         settings.refreshConfig(projectData.getConfig());
+        settings.refresh();
+        this.revalidate();
+        this.repaint();
+
     }
 
     @Override

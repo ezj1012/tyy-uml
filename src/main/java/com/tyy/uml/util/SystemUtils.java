@@ -2,6 +2,7 @@ package com.tyy.uml.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
@@ -201,8 +202,10 @@ public class SystemUtils {
     }
 
     public static <T> T readFile(File file, Class<? extends T> cls) throws IOException {
-        String string = IOUtils.toString(Files.newInputStream(file.toPath()), "UTF-8");
-        return JSON.parseObject(string, cls);
+        try (InputStream inputStream = Files.newInputStream(file.toPath());) {
+            String string = IOUtils.toString(inputStream, "UTF-8");
+            return JSON.parseObject(string, cls);
+        }
     }
 
     public static void writeFile(File file, Object obj) throws IOException {

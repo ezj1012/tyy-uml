@@ -17,6 +17,9 @@ import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.gui.comm.group.GroupSelectListener;
 import com.tyy.uml.gui.op.AbsUMLOperateMain;
 import com.tyy.uml.gui.op.UMLOperatePanel;
+import com.tyy.uml.gui.op.setting.mgr.ProjectItem;
+import com.tyy.uml.gui.op.setting.mgr.ProjectManager;
+import com.tyy.uml.gui.op.setting.ps.ProjectSettings;
 import com.tyy.uml.util.SWUtils;
 
 public class UMLSettings extends AbsUMLOperateMain implements BeanObserver, GroupSelectListener {
@@ -45,7 +48,7 @@ public class UMLSettings extends AbsUMLOperateMain implements BeanObserver, Grou
         infoList = new ProjectModels();
         this.add(infoList, BorderLayout.WEST);
         infoList.setVisible(false);
-        settings = new ProjectSettings();
+        settings = new ProjectSettings(ctrl);
         this.add(settings, BorderLayout.EAST);
         settings.setVisible(false);
     }

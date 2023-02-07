@@ -1,4 +1,4 @@
-package com.tyy.uml.gui.op.setting;
+package com.tyy.uml.gui.op.setting.mgr;
 
 import java.awt.Color;
 import java.util.ArrayList;
