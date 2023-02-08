@@ -11,11 +11,12 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
+import com.tyy.uml.gui.canvas.elements.UMLInfoPanel;
 import com.tyy.uml.gui.comm.UmlScrollBarUI;
 import com.tyy.uml.gui.comm.group.Group;
 import com.tyy.uml.util.SWUtils;
 
-public abstract class UMLCanvasScroll extends Group {
+public abstract class AbsScrollCanvas extends Group {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,7 +26,7 @@ public abstract class UMLCanvasScroll extends Group {
 
     protected UmlScrollBarUI vBarUI = new UmlScrollBarUI();
 
-    public UMLCanvasScroll() {
+    public AbsScrollCanvas() {
         initScroll();
     }
 

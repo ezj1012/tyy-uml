@@ -11,11 +11,12 @@ import java.util.Observable;
 import com.tyy.uml.core.ctx.Ctrl;
 import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.core.ctx.model.UMLModel;
+import com.tyy.uml.gui.canvas.elements.UMLInfoPanel;
 import com.tyy.uml.util.BeanHelper.BeanObservale;
 import com.tyy.uml.util.BeanHelper.BeanObserver;
 import com.tyy.uml.util.SWUtils;
 
-public class UMLCanvas extends UMLCanvasScroll implements BeanObserver {
+public class UMLCanvas extends AbsScrollCanvas implements BeanObserver {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,4 +1,4 @@
-package com.tyy.uml.gui.canvas;
+package com.tyy.uml.gui.canvas.elements;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

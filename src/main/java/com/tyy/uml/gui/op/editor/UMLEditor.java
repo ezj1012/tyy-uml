@@ -15,7 +15,7 @@ import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.core.ctx.model.UMLModel;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DDocumentListener;
-import com.tyy.uml.gui.canvas.UMLInfoPanel;
+import com.tyy.uml.gui.canvas.elements.UMLInfoPanel;
 import com.tyy.uml.gui.op.AbsUMLOperateMain;
 import com.tyy.uml.gui.op.UMLOperatePanel;
 import com.tyy.uml.util.SWUtils;

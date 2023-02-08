@@ -4,7 +4,7 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
-import com.tyy.uml.gui.canvas.UMLInfoPanel;
+import com.tyy.uml.gui.canvas.elements.UMLInfoPanel;
 import com.tyy.uml.gui.op.UMLOperatePanel;
 
 public class UMLInfoList extends JPanel {

@@ -4,7 +4,7 @@ import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.core.ctx.model.UMLProject;
 import com.tyy.uml.core.ctx.model.UMLProjectData;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
-import com.tyy.uml.gui.canvas.UMLInfoPanel;
+import com.tyy.uml.gui.canvas.elements.UMLInfoPanel;
 
 public interface Ctrl extends DKeyListener {
 
