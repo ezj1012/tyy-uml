@@ -55,15 +55,17 @@ public class Tray {
         popupMenu.add(exitItem);
         trayIcon = new TrayIcon(imageIcon.getImage(), "测试 ", popupMenu);
         trayIcon.setImageAutoSize(true);
-        trayIcon.addActionListener(e -> {
-            if (!frame.isVisible()) {
-                frame.doVisible();
-            }
-            if (frame.getState() == Frame.ICONIFIED) {
-                frame.setExtendedState(Frame.NORMAL);
-            }
-            frame.requestFocus();
-        });
+        trayIcon.addActionListener(e -> showFrame());
+    }
+
+    public synchronized void showFrame() {
+        if (!frame.isVisible()) {
+            frame.doVisible();
+        }
+        if (frame.getState() == Frame.ICONIFIED) {
+            frame.setExtendedState(Frame.NORMAL);
+        }
+        frame.requestFocus();
     }
 
     public synchronized void setVisible(boolean v) {

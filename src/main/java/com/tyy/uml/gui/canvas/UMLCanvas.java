@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import com.tyy.uml.bean.BeanHelper.BeanObservale;
-import com.tyy.uml.bean.BeanHelper.BeanObserver;
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
+import com.tyy.uml.core.ctx.model.UMLModel;
 import com.tyy.uml.gui.comm.group.Group;
-import com.tyy.uml.bean.UMLModel;
 import com.tyy.uml.util.SWUtils;
+import com.tyy.uml.util.BeanHelper.BeanObservale;
+import com.tyy.uml.util.BeanHelper.BeanObserver;
 
 public class UMLCanvas extends Group implements BeanObserver {
 

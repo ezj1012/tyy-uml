@@ -3,7 +3,7 @@ package com.tyy.uml.gui.op.setting.mgr;
 import java.awt.Color;
 import java.awt.Font;
 
-import com.tyy.uml.bean.UMLProject;
+import com.tyy.uml.core.ctx.model.UMLProject;
 import com.tyy.uml.gui.comm.TitleLabelPanel;
 import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.util.SWUtils;

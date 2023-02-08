@@ -1,4 +1,4 @@
-package com.tyy.uml.bean;
+package com.tyy.uml.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import com.tyy.uml.core.ctx.model.UMLModel;
+import com.tyy.uml.core.ctx.model.UMLModelField;
 
 public class UMLModelParser {
 

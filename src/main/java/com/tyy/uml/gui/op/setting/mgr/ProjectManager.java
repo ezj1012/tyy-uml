@@ -5,11 +5,11 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.bean.UMLWork;
-import com.tyy.uml.bean.BeanHelper.BeanObservale;
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
+import com.tyy.uml.core.ctx.model.UMLWork;
 import com.tyy.uml.gui.comm.group.GroupSelectListener;
+import com.tyy.uml.util.BeanHelper.BeanObservale;
 
 public class ProjectManager extends JPanel {
 

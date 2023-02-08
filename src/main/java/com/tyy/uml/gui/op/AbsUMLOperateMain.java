@@ -6,7 +6,7 @@ import java.awt.Component;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.context.Ctrl;
+import com.tyy.uml.core.ctx.Ctrl;
 
 public abstract class AbsUMLOperateMain extends JPanel {
 

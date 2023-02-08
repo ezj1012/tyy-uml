@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.bean.UMLProjectData;
-import com.tyy.uml.context.Ctrl;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.model.UMLProjectData;
 import com.tyy.uml.core.gui.adapter.DMouseListener;
 import com.tyy.uml.gui.comm.OperateLabelPanel;
 import com.tyy.uml.gui.op.UMLOperatePanel;

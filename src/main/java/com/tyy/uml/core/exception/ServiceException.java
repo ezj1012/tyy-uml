@@ -1,4 +1,4 @@
-package com.tyy.uml.exception;
+package com.tyy.uml.core.exception;
 
 public class ServiceException extends RuntimeException {
 

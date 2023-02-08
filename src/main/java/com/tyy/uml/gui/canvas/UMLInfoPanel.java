@@ -22,17 +22,17 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import com.tyy.uml.bean.BeanHelper;
-import com.tyy.uml.bean.UMLModel;
-import com.tyy.uml.bean.UMLModelField;
-import com.tyy.uml.bean.UMLModelParser;
-import com.tyy.uml.bean.BeanHelper.BeanObservale;
-import com.tyy.uml.bean.BeanHelper.BeanObserver;
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
+import com.tyy.uml.core.ctx.model.UMLModel;
+import com.tyy.uml.core.ctx.model.UMLModelField;
 import com.tyy.uml.gui.comm.EditorLabelPanel;
 import com.tyy.uml.gui.comm.group.GroupItem;
+import com.tyy.uml.util.BeanHelper;
 import com.tyy.uml.util.SWUtils;
+import com.tyy.uml.util.UMLModelParser;
+import com.tyy.uml.util.BeanHelper.BeanObservale;
+import com.tyy.uml.util.BeanHelper.BeanObserver;
 
 public class UMLInfoPanel extends GroupItem implements BeanObserver {
 

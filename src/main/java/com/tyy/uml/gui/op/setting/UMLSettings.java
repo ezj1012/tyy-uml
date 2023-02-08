@@ -7,12 +7,10 @@ import java.util.Observable;
 
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.bean.BeanHelper.BeanObservale;
-import com.tyy.uml.bean.BeanHelper.BeanObserver;
-import com.tyy.uml.bean.UMLProjectData;
-import com.tyy.uml.bean.UMLWork;
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
+import com.tyy.uml.core.ctx.model.UMLProjectData;
+import com.tyy.uml.core.ctx.model.UMLWork;
 import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.gui.comm.group.GroupSelectListener;
 import com.tyy.uml.gui.op.AbsUMLOperateMain;
@@ -21,6 +19,8 @@ import com.tyy.uml.gui.op.setting.mgr.ProjectItem;
 import com.tyy.uml.gui.op.setting.mgr.ProjectManager;
 import com.tyy.uml.gui.op.setting.ps.ProjectSettings;
 import com.tyy.uml.util.SWUtils;
+import com.tyy.uml.util.BeanHelper.BeanObservale;
+import com.tyy.uml.util.BeanHelper.BeanObserver;
 
 public class UMLSettings extends AbsUMLOperateMain implements BeanObserver, GroupSelectListener {
 

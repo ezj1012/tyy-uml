@@ -13,8 +13,8 @@ import javax.swing.JLayeredPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DMouseListener;
 import com.tyy.uml.gui.comm.SingleColorIcon;

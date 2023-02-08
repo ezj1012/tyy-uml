@@ -1,4 +1,4 @@
-package com.tyy.uml.gui.frame;
+package com.tyy.uml.gui;
 
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
@@ -13,15 +13,13 @@ import java.util.UUID;
 
 import javax.swing.JLayeredPane;
 
-import com.tyy.uml.bean.BeanHelper;
-import com.tyy.uml.bean.BeanHelper.BeanObservale;
-import com.tyy.uml.bean.UMLModel;
-import com.tyy.uml.bean.UMLProject;
-import com.tyy.uml.bean.UMLProjectData;
-import com.tyy.uml.bean.UMLWork;
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLContext;
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.UMLContext;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
+import com.tyy.uml.core.ctx.model.UMLModel;
+import com.tyy.uml.core.ctx.model.UMLProject;
+import com.tyy.uml.core.ctx.model.UMLProjectData;
+import com.tyy.uml.core.ctx.model.UMLWork;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
 import com.tyy.uml.gui.canvas.UMLCanvas;
@@ -31,7 +29,9 @@ import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.gui.op.UMLOperatePanel;
 import com.tyy.uml.gui.op.editor.UMLEditor;
 import com.tyy.uml.gui.op.setting.UMLSettings;
+import com.tyy.uml.util.BeanHelper;
 import com.tyy.uml.util.SystemUtils;
+import com.tyy.uml.util.BeanHelper.BeanObservale;
 
 public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctrl, DKeyListener {
 

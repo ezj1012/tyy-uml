@@ -1,4 +1,4 @@
-package com.tyy.uml.context;
+package com.tyy.uml.core.ctx.bean;
 
 import java.awt.Color;
 

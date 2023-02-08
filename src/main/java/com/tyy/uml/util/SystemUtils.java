@@ -26,7 +26,7 @@ import org.springframework.beans.BeanUtils;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONWriter;
-import com.tyy.uml.exception.ServiceException;
+import com.tyy.uml.core.exception.ServiceException;
 
 public class SystemUtils {
 

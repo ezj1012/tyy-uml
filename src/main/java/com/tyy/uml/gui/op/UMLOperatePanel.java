@@ -9,12 +9,12 @@ import java.util.Observable;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.bean.BeanHelper.BeanObservale;
-import com.tyy.uml.bean.BeanHelper.BeanObserver;
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.util.SWUtils;
+import com.tyy.uml.util.BeanHelper.BeanObservale;
+import com.tyy.uml.util.BeanHelper.BeanObserver;
 
 public class UMLOperatePanel extends JPanel implements BeanObserver, DComponentListener {
 

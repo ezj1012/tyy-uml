@@ -1,10 +1,10 @@
-package com.tyy.uml.bean;
+package com.tyy.uml.core.ctx.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.util.SWUtils;
 
 import lombok.Data;

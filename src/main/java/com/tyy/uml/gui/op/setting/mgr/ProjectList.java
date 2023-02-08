@@ -12,17 +12,17 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.bean.BeanHelper.BeanObserver;
-import com.tyy.uml.bean.UMLProject;
-import com.tyy.uml.bean.UMLWork;
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
+import com.tyy.uml.core.ctx.model.UMLProject;
+import com.tyy.uml.core.ctx.model.UMLWork;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.gui.comm.UmlScrollBarUI;
 import com.tyy.uml.gui.comm.group.Group;
 import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.gui.op.UMLOperatePanel;
 import com.tyy.uml.util.SWUtils;
+import com.tyy.uml.util.BeanHelper.BeanObserver;
 
 public class ProjectList extends Group implements BeanObserver, DComponentListener {
 

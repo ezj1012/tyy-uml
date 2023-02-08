@@ -1,4 +1,4 @@
-package com.tyy.uml.bean;
+package com.tyy.uml.util;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;

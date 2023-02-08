@@ -7,13 +7,13 @@ import java.util.Objects;
 
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.bean.UMLProject;
-import com.tyy.uml.bean.UMLWork;
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLContext;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.UMLContext;
+import com.tyy.uml.core.ctx.model.UMLProject;
+import com.tyy.uml.core.ctx.model.UMLWork;
+import com.tyy.uml.core.exception.ServiceException;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DFocusListener;
-import com.tyy.uml.exception.ServiceException;
 import com.tyy.uml.gui.comm.EditorLabelPanel;
 import com.tyy.uml.gui.comm.SingleColorIcon;
 import com.tyy.uml.gui.comm.SingleColorIconButton;

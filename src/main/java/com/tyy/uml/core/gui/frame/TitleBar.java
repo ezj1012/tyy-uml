@@ -21,7 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.util.Res;
 import com.tyy.uml.util.SWUtils;
 

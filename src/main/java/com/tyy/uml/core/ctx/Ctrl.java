@@ -1,7 +1,8 @@
-package com.tyy.uml.context;
+package com.tyy.uml.core.ctx;
 
-import com.tyy.uml.bean.UMLProject;
-import com.tyy.uml.bean.UMLProjectData;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
+import com.tyy.uml.core.ctx.model.UMLProject;
+import com.tyy.uml.core.ctx.model.UMLProjectData;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
 import com.tyy.uml.gui.canvas.UMLInfoPanel;
 import com.tyy.uml.gui.canvas.UMLScrollHelper;

@@ -1,4 +1,4 @@
-package com.tyy.uml.bean;
+package com.tyy.uml.core.ctx.model;
 
 import lombok.Data;
 

@@ -10,18 +10,18 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 
-import com.tyy.uml.bean.BeanHelper.BeanObservale;
-import com.tyy.uml.bean.BeanHelper.BeanObserver;
-import com.tyy.uml.bean.UMLModel;
-import com.tyy.uml.bean.UMLModelParser;
-import com.tyy.uml.context.Ctrl;
-import com.tyy.uml.context.UMLGUIConfig;
+import com.tyy.uml.core.ctx.Ctrl;
+import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
+import com.tyy.uml.core.ctx.model.UMLModel;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DDocumentListener;
 import com.tyy.uml.gui.canvas.UMLInfoPanel;
 import com.tyy.uml.gui.op.AbsUMLOperateMain;
 import com.tyy.uml.gui.op.UMLOperatePanel;
 import com.tyy.uml.util.SWUtils;
+import com.tyy.uml.util.UMLModelParser;
+import com.tyy.uml.util.BeanHelper.BeanObservale;
+import com.tyy.uml.util.BeanHelper.BeanObserver;
 
 public class UMLEditor extends AbsUMLOperateMain implements BeanObserver, DComponentListener, DDocumentListener {
 

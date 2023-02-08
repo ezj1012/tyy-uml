@@ -7,9 +7,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-import com.tyy.uml.context.UMLContext;
+import com.tyy.uml.core.ctx.UMLContext;
 
-public class UMLApplicationRunListener implements SpringApplicationRunListener, Ordered {
+public class UMLGUIBootstarter implements SpringApplicationRunListener, Ordered {
 
     final SpringApplication application;
 
@@ -17,7 +17,7 @@ public class UMLApplicationRunListener implements SpringApplicationRunListener, 
 
     ConfigurableEnvironment environment;
 
-    public UMLApplicationRunListener(SpringApplication application, String[] args) {
+    public UMLGUIBootstarter(SpringApplication application, String[] args) {
         this.application = application;
         this.args = args;
     }
