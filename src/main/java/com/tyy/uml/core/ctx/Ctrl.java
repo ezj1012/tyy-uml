@@ -5,7 +5,6 @@ import com.tyy.uml.core.ctx.model.UMLProject;
 import com.tyy.uml.core.ctx.model.UMLProjectData;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
 import com.tyy.uml.gui.canvas.UMLInfoPanel;
-import com.tyy.uml.gui.canvas.UMLScrollHelper;
 
 public interface Ctrl extends DKeyListener {
 
@@ -22,8 +21,6 @@ public interface Ctrl extends DKeyListener {
     void delProject(UMLProject project);
 
     void refreshProject();
-
-    UMLScrollHelper getScrollHelper();
 
     void setEditorContentCenter();
 

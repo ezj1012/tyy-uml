@@ -11,18 +11,15 @@ import java.util.Observable;
 import com.tyy.uml.core.ctx.Ctrl;
 import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.core.ctx.model.UMLModel;
-import com.tyy.uml.gui.comm.group.Group;
-import com.tyy.uml.util.SWUtils;
 import com.tyy.uml.util.BeanHelper.BeanObservale;
 import com.tyy.uml.util.BeanHelper.BeanObserver;
+import com.tyy.uml.util.SWUtils;
 
-public class UMLCanvas extends Group implements BeanObserver {
+public class UMLCanvas extends UMLCanvasScroll implements BeanObserver {
 
     private static final long serialVersionUID = 1L;
 
     private Ctrl ctrl;
-
-    private UMLScrollHelper scrollHelper;
 
     public UMLCanvas(Ctrl ctrl) {
         this.ctrl = ctrl;
@@ -33,20 +30,6 @@ public class UMLCanvas extends Group implements BeanObserver {
         setPreferredSize(new Dimension(cfg.getCanvasWidth(), cfg.getCanvasHeight()));
         setCenter();
         this.requestFocus();
-    }
-
-    public void setScroll(UMLScrollHelper scroll) {
-        this.scrollHelper = scroll;
-    }
-
-    public void setCenter() {
-        if (this.scrollHelper == null) { return; }
-        this.scrollHelper.setCenter();
-    }
-
-    public void setCenter(UMLInfoPanel info) {
-        if (this.scrollHelper == null) { return; }
-        this.scrollHelper.setCenter(info);
     }
 
     @Override
@@ -62,6 +45,8 @@ public class UMLCanvas extends Group implements BeanObserver {
         UMLInfoPanel classDes = new UMLInfoPanel(ctrl, null, e.getX(), e.getY());
         create(classDes, e);
     }
+
+  
 
     public void create(UMLInfoPanel info) {
         create(info, null);
@@ -84,16 +69,16 @@ public class UMLCanvas extends Group implements BeanObserver {
         if (prop == null || "canvasBackColor".equals(prop)) {
             Color backColor = SWUtils.decodeColor(ctrl.getCfg().getCanvasBackColor(), UMLGUIConfig.c252526);
             setBackground(backColor);
-            this.scrollHelper.setBackground(backColor);
+            setBackground(backColor);
         }
         if (prop == null || "canvasThumbColor".equals(prop)) {
-            this.scrollHelper.setThumbColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbColor(), UMLGUIConfig.c424242));
+            setThumbColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbColor(), UMLGUIConfig.c424242));
         }
         if (prop == null || "canvasThumbRolloverColor".equals(prop)) {
-            this.scrollHelper.setThumbRolloverColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbRolloverColor(), UMLGUIConfig.c4F4F4F));
+            setThumbRolloverColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbRolloverColor(), UMLGUIConfig.c4F4F4F));
         }
         if (prop == null || "canvasThumbDraggingColor".equals(prop)) {
-            this.scrollHelper.setThumbDraggingColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbDraggingColor(), UMLGUIConfig.c5E5E5E));
+            setThumbDraggingColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbDraggingColor(), UMLGUIConfig.c5E5E5E));
         }
     }
 

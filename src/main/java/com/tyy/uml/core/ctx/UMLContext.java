@@ -1,7 +1,6 @@
 package com.tyy.uml.core.ctx;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -46,10 +45,7 @@ public class UMLContext {
     }
 
     public void saveConfigs() {
-        try {
-            SystemUtils.writeFile(workConfigFile, workConfig);
-        } catch (IOException e) {
-        }
+        SystemUtils.writeFile(workConfigFile, workConfig);
     }
 
     private File getOrDefault(String fileDir, String filename) {
@@ -59,10 +55,7 @@ public class UMLContext {
     private <T> T readOrCreate(File filePath, Class<T> cl) {
         T data = null;
         if (filePath.exists()) {
-            try {
-                data = SystemUtils.readFile(filePath, cl);
-            } catch (IOException e) {
-            }
+            data = SystemUtils.readFile(filePath, cl);
         }
         if (data == null) {
             filePath.getParentFile().mkdirs();
@@ -74,11 +67,11 @@ public class UMLContext {
         }
         return data;
     }
-
-    private <T> T readOrCreate(String fileDir, String filename, Class<T> cl) {
-        File filePath = getOrDefault(fileDir, filename);
-        return readOrCreate(filePath, cl);
-    }
+    //
+    // private <T> T readOrCreate(String fileDir, String filename, Class<T> cl) {
+    // File filePath = getOrDefault(fileDir, filename);
+    // return readOrCreate(filePath, cl);
+    // }
 
     public UMLFrame getFrame() {
         return frame;

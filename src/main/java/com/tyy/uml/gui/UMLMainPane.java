@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,14 +23,14 @@ import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
 import com.tyy.uml.gui.canvas.UMLCanvas;
 import com.tyy.uml.gui.canvas.UMLInfoPanel;
-import com.tyy.uml.gui.canvas.UMLScrollHelper;
+import com.tyy.uml.gui.canvas.UMLCanvasScroll;
 import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.gui.op.UMLOperatePanel;
 import com.tyy.uml.gui.op.editor.UMLEditor;
 import com.tyy.uml.gui.op.setting.UMLSettings;
 import com.tyy.uml.util.BeanHelper;
-import com.tyy.uml.util.SystemUtils;
 import com.tyy.uml.util.BeanHelper.BeanObservale;
+import com.tyy.uml.util.SystemUtils;
 
 public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctrl, DKeyListener {
 
@@ -41,7 +40,7 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
 
     UMLCanvas canvasPanel;
 
-    UMLScrollHelper umlScorllPanel;
+    // UMLCanvasScroll umlScorllPanel;
 
     UMLOperatePanel operatePanel;
 
@@ -85,8 +84,10 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
     public void initCanvas() {
         canvasPanel = new UMLCanvas(this);
         canvasPanel.addKeyListener(this);
-        umlScorllPanel = new UMLScrollHelper(canvasPanel);
-        this.add(umlScorllPanel.getUmlScorllPanel(), JLayeredPane.DEFAULT_LAYER);
+        // umlScorllPanel = new UMLCanvasScroll(canvasPanel);
+        canvasPanel.addTo(e -> {
+            this.add(e, JLayeredPane.DEFAULT_LAYER);
+        });
     }
 
     @Override
@@ -114,6 +115,23 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
             UMLProject umlProject = iterator.next();
             if (Objects.equals(umlProject.getPath(), project.getPath())) {
                 iterator.remove();
+                File file = new File(project.getPath());
+                if (file.exists()) {
+                    File del = new File(workConfig.getBaseDir(), "history");
+                    del.mkdirs();
+                    File nf = null;
+                    String namep = umlProject.getName();
+                    int i = 0;
+                    while (true) {
+                        String newName = namep + (i == 0 ? "" : "(" + i + ")") + ".json";
+                        nf = new File(del, newName);
+                        if (!nf.exists()) {
+                            file.renameTo(nf);
+                            break;
+                        }
+                        i++;
+                    }
+                }
                 delF = true;
                 break;
             }
@@ -144,17 +162,11 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         File f = new File(project.getPath());
         UMLProjectData data = null;
         if (f.exists()) {
-            try {
-                data = SystemUtils.readFile(new File(project.getPath()), UMLProjectData.class);
-            } catch (IOException e) {
-            }
+            data = SystemUtils.readFile(new File(project.getPath()), UMLProjectData.class);
         }
         if (data == null) {
             data = SystemUtils.converBean(project, UMLProjectData.class);
-            try {
-                SystemUtils.writeFile(f, data);
-            } catch (Exception e) {
-            }
+            SystemUtils.writeFile(f, data);
         }
         UMLGUIConfig config = data.getConfig();
         data.setConfig(BeanHelper.proxy(config));
@@ -222,7 +234,7 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
 
     @Override
     public void componentResized(ComponentEvent e) {
-        umlScorllPanel.setSize(e.getComponent().getWidth(), e.getComponent().getHeight());
+        canvasPanel.setScorllSize(e.getComponent().getWidth(), e.getComponent().getHeight());
         canvasPanel.setCenter();
     }
 
@@ -268,11 +280,6 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
     @Override
     public UMLProjectData getCurProject() {
         return projectData;
-    }
-
-    @Override
-    public UMLScrollHelper getScrollHelper() {
-        return umlScorllPanel;
     }
 
     @Override

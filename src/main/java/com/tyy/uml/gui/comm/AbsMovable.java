@@ -1,7 +1,9 @@
 package com.tyy.uml.gui.comm;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -30,6 +32,8 @@ public class AbsMovable extends JPanel implements DMouseListener {
 
     private volatile boolean oneClickRun = false;
 
+    private volatile Integer oneClickButton = null;
+
     /**
      * @deprecated {@link #mouseOneClicked(MouseEvent)} {@link #mouseDblClicked(MouseEvent, int)}
      */
@@ -37,6 +41,7 @@ public class AbsMovable extends JPanel implements DMouseListener {
     @Deprecated
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() < 2) {
+            oneClickButton = e.getButton();
             oneClick = executor.submit(() -> {
                 try {
                     Thread.sleep(300);
@@ -48,6 +53,7 @@ public class AbsMovable extends JPanel implements DMouseListener {
                     mouseOneClicked(e);
                 } finally {
                     oneClickRun = false;
+                    oneClickButton = null;
                 }
             });
         } else {
@@ -55,9 +61,10 @@ public class AbsMovable extends JPanel implements DMouseListener {
                 oneClick.cancel(true);
                 oneClick = null;
             }
-            if (!oneClickRun) {
+            if (!oneClickRun && Objects.equals(oneClickButton, e.getButton())) {
                 mouseDblClicked(e, e.getClickCount());
             }
+            oneClickButton = e.getButton();
         }
     }
 
@@ -71,16 +78,31 @@ public class AbsMovable extends JPanel implements DMouseListener {
 
     protected int pressedY = 0;
 
+    protected volatile int pressedButton = MouseEvent.NOBUTTON;
+
+    protected volatile Cursor pressedBeforeCursor = null;
+
     @Override
     public void mousePressed(MouseEvent e) {
         pressedX = e.getX();
         pressedY = e.getY();
+        pressedButton = e.getButton();
+
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            pressedBeforeCursor = getCursor();
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         pressedX = 0;
         pressedY = 0;
+        pressedButton = MouseEvent.NOBUTTON;
+        if (pressedBeforeCursor != null) {
+            setCursor(pressedBeforeCursor);
+            pressedBeforeCursor = null;
+        }
     }
 
     public JTextField createLabel(int fontSize, int fontStyle, Color fontColor) {

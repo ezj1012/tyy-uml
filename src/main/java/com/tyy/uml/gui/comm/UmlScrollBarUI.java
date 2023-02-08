@@ -20,6 +20,10 @@ public class UmlScrollBarUI extends BasicScrollBarUI {
 
     int thumbH = -1;
 
+    protected Color thumbRolloverColor;
+
+    protected Color thumbDraggingColor;
+
     boolean b = false;
 
     public UmlScrollBarUI() {
@@ -69,6 +73,7 @@ public class UmlScrollBarUI extends BasicScrollBarUI {
 
         g.translate(thumbBounds.x, thumbBounds.y);
 
+        System.out.println(w + "  ---- " + h);
         // g.setColor(thumbDarkShadowColor);
         // drawRect(g, 0, 0, w - 1, h - 1);
 
@@ -82,13 +87,20 @@ public class UmlScrollBarUI extends BasicScrollBarUI {
             g.setColor(thumbColor);
         }
 
-        g.fillRect(0, 0, w - 1, h - 1);
+        g.fillRect(1, 1, w - 1, h - 1);
         g.translate(-thumbBounds.x, -thumbBounds.y);
     }
 
-    protected Color thumbRolloverColor;
+    protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
+        g.setColor(c.getBackground());
+        g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
 
-    protected Color thumbDraggingColor;
+        if (trackHighlight == DECREASE_HIGHLIGHT) {
+            paintDecreaseHighlight(g);
+        } else if (trackHighlight == INCREASE_HIGHLIGHT) {
+            paintIncreaseHighlight(g);
+        }
+    }
 
     public void setThumbDraggingColor(Color thumbDraggingColor) {
         this.thumbDraggingColor = thumbDraggingColor;
@@ -104,17 +116,6 @@ public class UmlScrollBarUI extends BasicScrollBarUI {
 
     public void setTrackColor(Color color) {
         this.trackColor = color;
-    }
-
-    protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
-        g.setColor(c.getBackground());
-        g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
-
-        if (trackHighlight == DECREASE_HIGHLIGHT) {
-            paintDecreaseHighlight(g);
-        } else if (trackHighlight == INCREASE_HIGHLIGHT) {
-            paintIncreaseHighlight(g);
-        }
     }
 
 }

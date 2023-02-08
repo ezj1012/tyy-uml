@@ -201,19 +201,23 @@ public class SystemUtils {
         if (isEmpty(val)) { throw new ServiceException(msg + "不可为空!"); }
     }
 
-    public static <T> T readFile(File file, Class<? extends T> cls) throws IOException {
+    public static <T> T readFile(File file, Class<? extends T> cls) {
         try (InputStream inputStream = Files.newInputStream(file.toPath());) {
             String string = IOUtils.toString(inputStream, "UTF-8");
             return JSON.parseObject(string, cls);
+        } catch (IOException e) {
+            return null;
         }
     }
 
-    public static void writeFile(File file, Object obj) throws IOException {
+    public static void writeFile(File file, Object obj) {
         String string = JSON.toJSONString(obj, JSONWriter.Feature.PrettyFormat);
         file.getParentFile().mkdirs();
         try (OutputStream newOutputStream = Files.newOutputStream(file.toPath())) {
             newOutputStream.write(string.getBytes("UTF-8"));
             newOutputStream.flush();
+        } catch (IOException e) {
+            throw new ServiceException("写文件失败!", e);
         }
     }
 
