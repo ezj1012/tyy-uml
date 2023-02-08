@@ -113,6 +113,16 @@ public class UMLEditor extends AbsUMLOperateMain implements BeanObserver, DCompo
     }
 
     public void setModel(UMLInfoPanel umlInfoPanel) {
+        if (umlInfoPanel == null) {
+            if (this.model != null && model instanceof BeanObservale) {
+                ((BeanObservale) model).deleteObserver(this);
+            }
+            this.model = null;
+            this.umlInfoPanel = umlInfoPanel;
+            this.rltEditor.refresModel(umlInfoPanel);
+            return;
+        }
+
         this.umlInfoPanel = umlInfoPanel;
         UMLModel newModel = umlInfoPanel.getModel();
         if (model == newModel) { return; }
@@ -123,7 +133,8 @@ public class UMLEditor extends AbsUMLOperateMain implements BeanObserver, DCompo
         this.model = newModel;
         this.editorPane.setText(this.model.getUmlString());
         setTitle(UMLModelParser.toClassTitle(this.model));
-        this.rltEditor.refresModel(this.model);
+
+        this.rltEditor.refresModel(umlInfoPanel);
     }
 
     @Override
@@ -153,8 +164,12 @@ public class UMLEditor extends AbsUMLOperateMain implements BeanObserver, DCompo
             this.setBorder(new EmptyBorder(0, 0, 0, 0));
         }
 
-        public void refresModel(UMLModel model) {
-            this.model = model;
+        public void refresModel(UMLInfoPanel umlInfoPanel) {
+            if (umlInfoPanel != null) {
+                this.model = umlInfoPanel.getModel();
+            } else {
+                this.model = null;
+            }
         }
 
     }

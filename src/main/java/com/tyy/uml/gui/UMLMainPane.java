@@ -212,11 +212,12 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         canvasPanel.refreshConfig(projectData.getConfig());
         operatePanel.refreshConfig(projectData.getConfig());
         editor.refreshConfig(projectData.getConfig());
+        editor.setModel(null);
         settings.refreshConfig(projectData.getConfig());
         settings.refresh();
+        frame.setTitle(projectData.getName());
         this.revalidate();
         this.repaint();
-
     }
 
     @Override
@@ -238,26 +239,9 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
             this.settings.showMe();
             this.settings.refresh();
             this.settings.requestFocus();
-        } else if (this.editor.getUmlInfoPanel() != null) {
-            this.editor.showMe();
         } else {
-            UMLInfoPanel selected = null;
-            List<GroupItem> items = this.canvasPanel.getItems();
-            if (items.isEmpty()) {
-                UMLInfoPanel info = new UMLInfoPanel(this, null, this.canvasPanel.getWidth() / 2, this.canvasPanel.getHeight() / 2);
-                this.canvasPanel.create(info);
-            }
-            for (GroupItem groupItem : items) {
-                if (groupItem.isSelected()) {
-                    selected = (UMLInfoPanel) groupItem;
-                    break;
-                }
-            }
-            if (selected == null && !items.isEmpty()) {
-                this.canvasPanel.selectItem(items.get(0), null);
-                selected = (UMLInfoPanel) items.get(0);
-            }
-            showEditor(selected);
+
+            setEditorContentCenter();
         }
         this.revalidate();
         this.repaint();
@@ -292,8 +276,57 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
     }
 
     @Override
-    public void setEditorContentCenter() {
-        getScrollHelper().setCenter(this.editor.getUmlInfoPanel());
+    public synchronized void setEditorContentCenter() {
+        UMLInfoPanel umlInfoPanel = this.editor.getUmlInfoPanel();
+        if (umlInfoPanel == null) {
+            umlInfoPanel = getSelectOrCreateUMLInfoPanel(0);
+        }
+        showEditor(umlInfoPanel);
+    }
+
+    @Override
+    public synchronized void setEditorNextCenter() {
+        showEditor(getSelectOrCreateUMLInfoPanel(1));
+    }
+
+    @Override
+    public synchronized void setEditorPrevCenter() {
+        showEditor(getSelectOrCreateUMLInfoPanel(-1));
+    }
+
+    /**
+     * 
+     * @param i
+     *            -1 上一个,0当前,1 下一个
+     * @return
+     */
+    private UMLInfoPanel getSelectOrCreateUMLInfoPanel(int i) {
+        UMLInfoPanel selected = null;
+        List<GroupItem> items = this.canvasPanel.getItems();
+        if (items.isEmpty()) {
+            UMLInfoPanel info = new UMLInfoPanel(this, null, this.canvasPanel.getWidth() / 2, this.canvasPanel.getHeight() / 2);
+            this.canvasPanel.create(info);
+        }
+        for (int j = 0; j < items.size(); j++) {
+            GroupItem groupItem = items.get(j);
+            if (groupItem.isSelected()) {
+                selected = (UMLInfoPanel) groupItem;
+                if (i != 0) {
+                    int idx = j + i;
+                    idx = idx < 0 ? items.size() - 1 : idx;
+                    idx = idx >= items.size() ? 0 : idx;
+                    selected = (UMLInfoPanel) items.get(idx);
+                    this.canvasPanel.selectItem(selected, null);
+                }
+                break;
+            }
+        }
+
+        if (selected == null && !items.isEmpty()) {
+            this.canvasPanel.selectItem(items.get(0), null);
+            selected = (UMLInfoPanel) items.get(0);
+        }
+        return selected;
     }
 
     @Override

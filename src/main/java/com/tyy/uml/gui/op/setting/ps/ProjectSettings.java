@@ -12,6 +12,7 @@ import com.tyy.uml.core.ctx.model.UMLProjectData;
 import com.tyy.uml.core.gui.adapter.DMouseListener;
 import com.tyy.uml.gui.comm.OperateLabelPanel;
 import com.tyy.uml.gui.op.UMLOperatePanel;
+import com.tyy.uml.gui.op.setting.UMLSettings;
 
 public class ProjectSettings extends JPanel implements DMouseListener {
 
@@ -25,8 +26,12 @@ public class ProjectSettings extends JPanel implements DMouseListener {
 
     UMLProjectData project;
 
-    public ProjectSettings(Ctrl ctrl) {
+    UMLSettings umlSettings;
+
+    public ProjectSettings(Ctrl ctrl, UMLSettings umlSettings) {
         this.ctrl = ctrl;
+        this.umlSettings = umlSettings;
+
         setPreferredSize(new Dimension(300, UMLOperatePanel.fixedHeight));
         setBorder(new EmptyBorder(0, 0, 0, 0));
         setOpaque(false);
@@ -34,6 +39,8 @@ public class ProjectSettings extends JPanel implements DMouseListener {
         titlePanel = new OperateLabelPanel(fixedHeight, JTextField.LEFT);
         titlePanel.addRightButton("close.png", 12, (btn, e) -> {
             ctrl.delProject(project);
+            this.setVisible(false);
+            umlSettings.refreshSize();
         });
         titlePanel.addRightButton("check.png", 12, (btn, e) -> {
             ctrl.saveProject(project);
@@ -42,6 +49,7 @@ public class ProjectSettings extends JPanel implements DMouseListener {
             if (project != null) {
                 ctrl.loadProject(project, false);
                 ctrl.refreshProject();
+                ctrl.showSettings(false);
             }
         });
         this.add(titlePanel, BorderLayout.NORTH);

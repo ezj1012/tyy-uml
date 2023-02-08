@@ -2,6 +2,7 @@ package com.tyy.uml.gui.op.setting.mgr;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ import com.tyy.uml.core.ctx.model.UMLWork;
 import com.tyy.uml.core.exception.ServiceException;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DFocusListener;
+import com.tyy.uml.core.gui.adapter.DKeyListener;
 import com.tyy.uml.gui.comm.EditorLabelPanel;
 import com.tyy.uml.gui.comm.SingleColorIcon;
 import com.tyy.uml.gui.comm.SingleColorIconButton;
@@ -21,7 +23,7 @@ import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.util.SWUtils;
 import com.tyy.uml.util.SystemUtils;
 
-public class ProjectAdd extends GroupItem implements DComponentListener, DFocusListener {
+public class ProjectAdd extends GroupItem implements DComponentListener, DFocusListener, DKeyListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,9 +49,10 @@ public class ProjectAdd extends GroupItem implements DComponentListener, DFocusL
         btn = new SingleColorIconButton(20, 20, new SingleColorIcon("check.png", 14, 14), new Color(133, 133, 133));
         btn.addActionListener(e -> addProject());
         this.add(btn, BorderLayout.EAST);
+        labelPanel.addKeyListener(this);
     }
 
-    private void addProject() {
+    private synchronized void addProject() {
         String text = labelPanel.getText();
         if (!SystemUtils.isEmpty(text)) {
             List<UMLProject> projects = workConfig.getProjects();
@@ -71,6 +74,13 @@ public class ProjectAdd extends GroupItem implements DComponentListener, DFocusL
     @Override
     public void requestFocus() {
         this.labelPanel.requestFocus();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            addProject();
+        }
     }
 
 }

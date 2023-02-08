@@ -48,7 +48,7 @@ public class UMLSettings extends AbsUMLOperateMain implements BeanObserver, Grou
         infoList = new ProjectModels();
         this.add(infoList, BorderLayout.WEST);
         infoList.setVisible(false);
-        settings = new ProjectSettings(ctrl);
+        settings = new ProjectSettings(ctrl, this);
         this.add(settings, BorderLayout.EAST);
         settings.setVisible(false);
     }

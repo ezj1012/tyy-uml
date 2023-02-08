@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -120,6 +121,10 @@ public class EditorLabelPanel extends JPanel {
 
     public synchronized void addFocusListener(FocusListener l) {
         this.showField.addFocusListener(l);
+    }
+
+    public synchronized void addKeyListener(KeyListener l) {
+        this.showField.addKeyListener(l);
     }
 
     public String getText() {

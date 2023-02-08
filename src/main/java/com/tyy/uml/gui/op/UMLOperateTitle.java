@@ -83,7 +83,9 @@ public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DCo
             this.add(leftBtns.get(i), JLayeredPane.PALETTE_LAYER);
         }
 
+        rightBtns.add(createBtn("page_first.png", (btn, e) -> this.ctrl.setEditorPrevCenter()));
         rightBtns.add(createBtn("view.png", (btn, e) -> this.ctrl.setEditorContentCenter()));
+        rightBtns.add(createBtn("page_last.png", (btn, e) -> this.ctrl.setEditorNextCenter()));
         rightBtns.add(createBtn("list.png", (btn, e) -> this.ctrl.toggleEditorList()));
         rightBtns.add(createBtn("close.png", (btn, e) -> {
             this.ctrl.hideEditor();

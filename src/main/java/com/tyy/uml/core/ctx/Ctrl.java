@@ -27,6 +27,10 @@ public interface Ctrl extends DKeyListener {
 
     void setEditorContentCenter();
 
+    void setEditorNextCenter();
+
+    void setEditorPrevCenter();
+
     void showEditor(UMLInfoPanel info);
 
     void hideEditor();
