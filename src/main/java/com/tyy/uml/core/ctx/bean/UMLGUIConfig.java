@@ -6,8 +6,10 @@ import com.tyy.uml.core.gui.frame.JFrameParameters;
 import com.tyy.uml.util.SWUtils;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class UMLGUIConfig extends JFrameParameters {
 
     public static final Color c1e1e1e = new Color(30, 30, 30);
