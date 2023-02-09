@@ -23,7 +23,6 @@ import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
 import com.tyy.uml.gui.canvas.UMLCanvas;
 import com.tyy.uml.gui.canvas.elements.UMLInfoPanel;
-import com.tyy.uml.gui.canvas.AbsScrollCanvas;
 import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.gui.op.UMLOperatePanel;
 import com.tyy.uml.gui.op.editor.UMLEditor;
@@ -228,6 +227,8 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         settings.refreshConfig(projectData.getConfig());
         settings.refresh();
         frame.setTitle(projectData.getName());
+        frame.refreshFrameParameters(projectData.getConfig());
+        projectData.getConfig().setFrameTitle(projectData.getName());
         this.revalidate();
         this.repaint();
     }

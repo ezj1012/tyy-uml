@@ -31,6 +31,8 @@ public class JFrameParameters {
 
     protected String frameIcon;
 
+    protected String frameTitle;
+    
     public JFrameParameters() {
     }
 

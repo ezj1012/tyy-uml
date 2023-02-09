@@ -18,6 +18,7 @@ import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -25,7 +26,7 @@ import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.util.Res;
 import com.tyy.uml.util.SWUtils;
 
-public class TitleBar extends JPanel implements ComponentListener {
+public class TitleBar extends JLayeredPane implements ComponentListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,7 +38,11 @@ public class TitleBar extends JPanel implements ComponentListener {
 
     JFrameParameters parameters;
 
-    JPanel buts = new JPanel();
+    JPanel iconPanel = new JPanel();
+
+    ImageIcon imageIcon;
+
+    JPanel butsPanel = new JPanel();
 
     /**
      * 最小化
@@ -53,38 +58,108 @@ public class TitleBar extends JPanel implements ComponentListener {
 
     private Boolean mainFrameResizable = null;
 
-    public TitleBar(JFrame parent, JFrameParameters parameters) {
-        this.mainFrame = parent;
+    private TitleBarContent baseContent;
+
+    private TitleBarContent customContent;
+
+    public TitleBar(JFrame mainFrame, JFrameParameters parameters) {
+        this.mainFrame = mainFrame;
         this.parameters = parameters;
+        this.setOpaque(false);
         this.setMinimumSize(new Dimension(parameters.getIconWidth() + parameters.getControlBoxWidth(), parameters.getTitleBarHeight()));
         this.addComponentListener(this);
-        setLayout(null);
-        minBtn = new JButton();
-        minBtn = addBtn(1, e -> parent.setExtendedState(Frame.ICONIFIED));
-        restoreBtn = addBtn(2, e -> parent.setExtendedState(parent.getExtendedState() == Frame.MAXIMIZED_BOTH ? Frame.NORMAL : Frame.MAXIMIZED_BOTH));
-        closeBut = addBtn(3, e -> parent.setVisible(false));
+        // setLayout(new BorderLayout());
+        initIcon();
+        initContent();
+        initBtns();
+    }
 
-        buts.setBounds(getWidth() - parameters.getControlBoxWidth(), 0, parameters.getControlBoxWidth(), parameters.getTitleBarHeight());
-        buts.setLayout(new BoxLayout(buts, BoxLayout.LINE_AXIS));
-        this.buts.add(closeBut);
-        this.add(buts);
+    private void initIcon() {
+        iconPanel = new JPanel() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (imageIcon != null) {
+                    int x = (parameters.getIconWidth() - ICON_SIZE) / 2;
+                    int y = (parameters.getTitleBarHeight() - ICON_SIZE) / 2;
+                    g.drawImage(imageIcon.getImage(), x, y, ICON_SIZE, ICON_SIZE, this);
+                }
+            }
+
+        };
+        iconPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+        iconPanel.setBounds(0, 0, parameters.getIconWidth(), parameters.getTitleBarHeight());
+        this.add(iconPanel, JLayeredPane.MODAL_LAYER);
+    }
+
+    private void initContent() {
+        baseContent = new TitleBarContent(parameters);
+        baseContent.setBorder(new EmptyBorder(0, 0, 0, 0));
+        baseContent.setOpaque(false);
+        baseContent.setBounds(0, 0, getWidth(), getHeight());
+        this.add(baseContent, JLayeredPane.DEFAULT_LAYER);
+    }
+
+    public void setTitleBarContent(TitleBarContent content) {
+        if (customContent != null) {
+            this.remove(customContent);
+        }
+        if (content != null) {
+            this.remove(baseContent);
+            this.add(customContent = content, JLayeredPane.DEFAULT_LAYER);
+        } else {
+            customContent = null;
+            this.add(baseContent, JLayeredPane.DEFAULT_LAYER);
+        }
+    }
+
+    public TitleBarContent getTitleBarContent() {
+        return customContent != null ? customContent : baseContent;
+    }
+
+    private void initBtns() {
+        minBtn = addBtn(1, e -> this.mainFrame.setExtendedState(Frame.ICONIFIED));
+        restoreBtn = addBtn(2, e -> this.mainFrame.setExtendedState(this.mainFrame.getExtendedState() == Frame.MAXIMIZED_BOTH ? Frame.NORMAL : Frame.MAXIMIZED_BOTH));
+        closeBut = addBtn(3, e -> this.mainFrame.setVisible(false));
+        butsPanel.setBounds(0, 0, parameters.getControlBoxWidth(), parameters.getTitleBarHeight());
+        butsPanel.setLayout(new BoxLayout(butsPanel, BoxLayout.LINE_AXIS));
+        this.butsPanel.add(closeBut);
+        this.add(butsPanel, JLayeredPane.MODAL_LAYER);
     }
 
     public void refreshFrameParameters(JFrameParameters frameParameters) {
         this.parameters = frameParameters;
+        baseContent.refreshFrameParameters(frameParameters);
+        if (customContent != null) {
+            customContent.refreshFrameParameters(frameParameters);
+        }
         this.refreshVisible();
     }
 
     public void refreshVisible() {
         Color back = SWUtils.decodeColor(parameters.getTitleBarBackground(), UMLGUIConfig.c333333);
         this.setBackground(back);
+
+        // 左侧图标
+        imageIcon = Res.get().getImage(parameters.getFrameIcon());
+        Image image = imageIcon == null ? null : imageIcon.getImage();
+        this.mainFrame.setIconImage(image);
+        iconPanel.setBounds(0, 0, parameters.getIconWidth(), parameters.getTitleBarHeight());
+
+        //
+        baseContent.setBackground(back);
+        baseContent.setBounds(0, 0, getWidth(), getHeight());
+        if (customContent != null) {
+            customContent.setBackground(back);
+            customContent.setBounds(0, 0, getWidth(), getHeight());
+        }
+
+        // 右侧按钮
         this.minBtn.setBackground(back);
         this.restoreBtn.setBackground(back);
         this.closeBut.setBackground(back);
-
-        ImageIcon imageIcon = Res.get().getImage(parameters.getFrameIcon());
-        Image image = imageIcon == null ? null : imageIcon.getImage();
-        this.mainFrame.setIconImage(image);
 
         refreshBtns();
         this.setMinimumSize(new Dimension(parameters.getIconWidth() + parameters.getControlBoxWidth(), parameters.getTitleBarHeight()));
@@ -94,35 +169,30 @@ public class TitleBar extends JPanel implements ComponentListener {
     private void refreshBtns() {
         if (mainFrameResizable == null || mainFrameResizable != mainFrame.isResizable()) {
             int l = parameters.getControlWidth() * 3;
-            buts.removeAll();
-            buts.add(minBtn);
+            butsPanel.removeAll();
+            butsPanel.add(minBtn);
             if (!mainFrame.isResizable()) {
                 l = parameters.getControlWidth() * 2;
                 mainFrameResizable = false;
             } else {
                 mainFrameResizable = true;
-                buts.add(restoreBtn);
+                butsPanel.add(restoreBtn);
             }
-            buts.add(closeBut);
+            butsPanel.add(closeBut);
             parameters.setControlBoxWidth(l);
             this.revalidate();
         }
-        buts.setBounds(getWidth() - parameters.getControlBoxWidth(), 0, parameters.getControlBoxWidth(), parameters.getTitleBarHeight());
+        butsPanel.setBounds(getWidth() - parameters.getControlBoxWidth(), 0, parameters.getControlBoxWidth(), parameters.getTitleBarHeight());
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Image iconImage = mainFrame.getIconImage();
-        if (iconImage != null) {
-            int x = (parameters.getIconWidth() - ICON_SIZE) / 2;
-            int y = (parameters.getTitleBarHeight() - ICON_SIZE) / 2;
-            g.drawImage(iconImage, x, y, ICON_SIZE, ICON_SIZE, this);
-        }
     }
 
     @Override
     public void componentResized(ComponentEvent e) {
+        baseContent.setBounds(0, 0, getWidth(), getHeight());
         refreshBtns();
     }
 
