@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentListener;
 
 import com.tyy.uml.util.SWUtils;
 
@@ -25,7 +26,12 @@ public class EditorLabelPanel extends JPanel {
         this.setOpaque(false);
         showField = createLabel(12, Font.PLAIN, Color.BLACK, 0, 5, 0, 0, false);
         this.add(showField, BorderLayout.CENTER);
+
         SWUtils.fixedHeight(this, 16);
+    }
+
+    public synchronized void addDocumentListener(DocumentListener listener) {
+        showField.getDocument().addDocumentListener(listener);
     }
 
     public EditorLabelPanel(int fixedHeight, Color fontColor) {

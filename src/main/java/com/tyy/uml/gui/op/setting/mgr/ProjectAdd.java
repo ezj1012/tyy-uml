@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
 
 import com.tyy.uml.core.ctx.Ctrl;
 import com.tyy.uml.core.ctx.UMLContext;
@@ -14,6 +15,7 @@ import com.tyy.uml.core.ctx.model.UMLProject;
 import com.tyy.uml.core.ctx.model.UMLWork;
 import com.tyy.uml.core.exception.ServiceException;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
+import com.tyy.uml.core.gui.adapter.DDocumentListener;
 import com.tyy.uml.core.gui.adapter.DFocusListener;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
 import com.tyy.uml.gui.comm.EditorLabelPanel;
@@ -23,7 +25,7 @@ import com.tyy.uml.gui.comm.group.GroupItem;
 import com.tyy.uml.util.SWUtils;
 import com.tyy.uml.util.SystemUtils;
 
-public class ProjectAdd extends GroupItem implements DComponentListener, DFocusListener, DKeyListener {
+public class ProjectAdd extends GroupItem implements DComponentListener, DFocusListener, DKeyListener, DDocumentListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,6 +52,12 @@ public class ProjectAdd extends GroupItem implements DComponentListener, DFocusL
         btn.addActionListener(e -> addProject());
         this.add(btn, BorderLayout.EAST);
         labelPanel.addKeyListener(this);
+        labelPanel.addDocumentListener(this);
+    }
+
+    @Override
+    public void changed(DocumentEvent e, String newValue) {
+        System.out.println(newValue);
     }
 
     private synchronized void addProject() {

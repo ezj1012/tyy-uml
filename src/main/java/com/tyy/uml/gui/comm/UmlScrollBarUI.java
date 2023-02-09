@@ -73,7 +73,7 @@ public class UmlScrollBarUI extends BasicScrollBarUI {
 
         g.translate(thumbBounds.x, thumbBounds.y);
 
-        System.out.println(w + "  ---- " + h);
+        // System.out.println(w + " ---- " + h);
         // g.setColor(thumbDarkShadowColor);
         // drawRect(g, 0, 0, w - 1, h - 1);
 
