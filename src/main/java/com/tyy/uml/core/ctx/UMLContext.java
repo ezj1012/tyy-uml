@@ -43,7 +43,9 @@ public class UMLContext {
         frame = new UMLFrame(workConfig.getConfig());
         //
         TitleBarContent barContent = frame.getTitleBar().getTitleBarContent();
-        barContent.addLeftButton("测试", null);
+        barContent.addLeftButton("打开项目", (b, e) -> {
+            ctrl.showSettings(true);
+        });
 
         //
         ctrl = new UMLMainPane(frame, workConfig);

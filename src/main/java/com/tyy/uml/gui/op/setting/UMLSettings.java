@@ -42,15 +42,14 @@ public class UMLSettings extends AbsUMLOperateMain implements BeanObserver, Grou
         this.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.setLayout(new BorderLayout());
         projectManager = new ProjectManager(ctrl, workConfig);
-        this.add(projectManager, BorderLayout.CENTER);
+        this.add(projectManager, BorderLayout.WEST);
         projectManager.addSelectListener(this);
-
-        infoList = new ProjectModels();
-        this.add(infoList, BorderLayout.WEST);
-        infoList.setVisible(false);
         settings = new ProjectSettings(ctrl, this);
-        this.add(settings, BorderLayout.EAST);
+        this.add(settings, BorderLayout.CENTER);
         settings.setVisible(false);
+        infoList = new ProjectModels();
+        this.add(infoList, BorderLayout.EAST);
+        infoList.setVisible(false);
     }
 
     @Override
@@ -95,11 +94,11 @@ public class UMLSettings extends AbsUMLOperateMain implements BeanObserver, Grou
         ProjectItem pi = (ProjectItem) item;
         selectData = ctrl.loadProject(pi.getProject(), true);
 
-        infoList.setVisible(true);
-        infoList.refresModels(selectData.getModels());
-
         settings.setVisible(true);
         settings.refresData(selectData);
+
+        // infoList.setVisible(true);
+        infoList.refresModels(selectData.getModels());
 
         refreshSize();
     }

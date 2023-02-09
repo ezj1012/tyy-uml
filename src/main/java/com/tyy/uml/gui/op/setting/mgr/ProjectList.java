@@ -5,34 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
-
 import com.tyy.uml.core.ctx.Ctrl;
 import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.core.ctx.model.UMLProject;
 import com.tyy.uml.core.ctx.model.UMLWork;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
-import com.tyy.uml.gui.comm.UmlScrollBarUI;
-import com.tyy.uml.gui.comm.group.Group;
 import com.tyy.uml.gui.comm.group.GroupItem;
-import com.tyy.uml.gui.op.UMLOperatePanel;
-import com.tyy.uml.util.SWUtils;
+import com.tyy.uml.gui.comm.group.ListGroup;
 import com.tyy.uml.util.BeanHelper.BeanObserver;
+import com.tyy.uml.util.SWUtils;
 
-public class ProjectList extends Group implements BeanObserver, DComponentListener {
+public class ProjectList extends ListGroup implements BeanObserver, DComponentListener {
 
     private static final long serialVersionUID = 1L;
 
     private Ctrl ctrl;
-
-    JScrollPane umlScorllPanel;
-
-    UmlScrollBarUI vBarUI = new UmlScrollBarUI();
 
     UMLWork workConfig;
 
@@ -43,8 +30,6 @@ public class ProjectList extends Group implements BeanObserver, DComponentListen
     public ProjectList(Ctrl ctrl, UMLWork workConfig) {
         this.ctrl = ctrl;
         this.workConfig = workConfig;
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        initScorllPanel();
         this.refresh();
     }
 
@@ -57,22 +42,6 @@ public class ProjectList extends Group implements BeanObserver, DComponentListen
             newItems.add(projectItem);
         }
         this.replace(newItems);
-    }
-
-    private void initScorllPanel() {
-        umlScorllPanel = new JScrollPane(this);
-        umlScorllPanel.setOpaque(false);
-        SWUtils.fixedAndNoBorder(umlScorllPanel, ProjectManager.fixedWidth, UMLOperatePanel.fixedHeight);
-        umlScorllPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
-        umlScorllPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        JScrollBar vBar = umlScorllPanel.getVerticalScrollBar();
-        vBar.setUI(vBarUI);
-        SWUtils.fixedWidth(vBar, 10);
-        umlScorllPanel.addComponentListener(this);
-    }
-
-    public void addTo(JComponent parent, String center) {
-        parent.add(umlScorllPanel, center);
     }
 
     public void updateConfig(UMLGUIConfig cfg, String prop, Object newValue) {

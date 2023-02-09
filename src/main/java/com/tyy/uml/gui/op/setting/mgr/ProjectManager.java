@@ -28,7 +28,9 @@ public class ProjectManager extends JPanel {
         add = new ProjectAdd(ctrl, workConfig);
         projectList = new ProjectList(ctrl, workConfig);
         add(add, BorderLayout.NORTH);
-        projectList.addTo(this, BorderLayout.CENTER);
+        projectList.addTo(e -> {
+            this.add(e, BorderLayout.CENTER);
+        });
     }
 
     @Override
