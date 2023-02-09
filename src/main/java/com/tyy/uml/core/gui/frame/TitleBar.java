@@ -81,6 +81,7 @@ public class TitleBar extends JLayeredPane implements ComponentListener {
 
             @Override
             protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
                 if (imageIcon != null) {
                     int x = (parameters.getIconWidth() - ICON_SIZE) / 2;
                     int y = (parameters.getTitleBarHeight() - ICON_SIZE) / 2;
@@ -140,19 +141,22 @@ public class TitleBar extends JLayeredPane implements ComponentListener {
 
     public void refreshVisible() {
         Color back = SWUtils.decodeColor(parameters.getTitleBarBackground(), UMLGUIConfig.c333333);
+        Color fontColor = SWUtils.decodeColor(parameters.getTitleBarFontColor(), UMLGUIConfig.cd4d4d4);
         this.setBackground(back);
 
         // 左侧图标
         imageIcon = Res.get().getImage(parameters.getFrameIcon());
         Image image = imageIcon == null ? null : imageIcon.getImage();
         this.mainFrame.setIconImage(image);
+        iconPanel.setBackground(back);
         iconPanel.setBounds(0, 0, parameters.getIconWidth(), parameters.getTitleBarHeight());
-
         //
         baseContent.setBackground(back);
+        baseContent.setForeground(fontColor);
         baseContent.setBounds(0, 0, getWidth(), getHeight());
         if (customContent != null) {
             customContent.setBackground(back);
+            customContent.setForeground(fontColor);
             customContent.setBounds(0, 0, getWidth(), getHeight());
         }
 

@@ -29,10 +29,12 @@ public class JFrameParameters {
 
     protected String titleBarBackground;
 
+    protected String titleBarFontColor;
+
     protected String frameIcon;
 
     protected String frameTitle;
-    
+
     public JFrameParameters() {
     }
 

@@ -8,6 +8,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import com.tyy.uml.core.ctx.model.UMLWork;
 import com.tyy.uml.core.exception.ServiceException;
 import com.tyy.uml.core.gui.frame.TitleBar;
+import com.tyy.uml.core.gui.frame.TitleBarContent;
 import com.tyy.uml.core.gui.frame.Tray;
 import com.tyy.uml.gui.UMLFrame;
 import com.tyy.uml.gui.UMLMainPane;
@@ -40,8 +41,14 @@ public class UMLContext {
         workConfig = readOrCreate(workConfigFile, UMLWork.class);
         workConfig.setBaseDir(workConfigFile.getParentFile().getAbsolutePath());
         frame = new UMLFrame(workConfig.getConfig());
+        //
+        TitleBarContent barContent = frame.getTitleBar().getTitleBarContent();
+        barContent.addLeftButton("测试", null);
+
+        //
         ctrl = new UMLMainPane(frame, workConfig);
         frame.setMainPanel((UMLMainPane) ctrl);
+
     }
 
     public void saveConfigs() {

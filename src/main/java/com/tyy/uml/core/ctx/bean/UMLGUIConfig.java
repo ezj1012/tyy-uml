@@ -65,6 +65,8 @@ public class UMLGUIConfig extends JFrameParameters {
         canvasThumbColor = SWUtils.toHex(c424242);
         canvasThumbRolloverColor = SWUtils.toHex(c4F4F4F);
         canvasThumbDraggingColor = SWUtils.toHex(c5E5E5E);
+        titleBarFontColor = SWUtils.toHex(cd4d4d4);
+        frameIcon = "favicon.png";
     }
 
 }

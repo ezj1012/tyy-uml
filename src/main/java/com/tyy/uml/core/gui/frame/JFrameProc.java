@@ -55,7 +55,7 @@ public class JFrameProc implements WinUser.WindowProc {
 
     JFrameParameters frameParameters;
 
-    JFrame frame;
+    CustomFrame frame;
 
     public JFrameProc(JFrameParameters frameParameters) {
         // this.frameParameters = new JFrameParameters();
@@ -71,7 +71,7 @@ public class JFrameProc implements WinUser.WindowProc {
         this.frameParameters = frameParameters;
     }
 
-    public void init(JFrame frame) {
+    public void init(CustomFrame frame) {
         if (frame == null) {
             this.frame = frame;
             return;
@@ -125,9 +125,13 @@ public class JFrameProc implements WinUser.WindowProc {
             // 拖动大小
             onResizeBorder = (ptMouse.y < (rcWindow.top + borderThickness)); // Top Resizing
             if (!onResizeBorder) {
+                int lb = rcWindow.left + frameParameters.getIconWidth() + frame.getTitleBar().getTitleBarContent().getLeftButtonWidth();
+                int rb = rcWindow.right - (frameParameters.getControlBoxWidth() + frame.getTitleBar().getTitleBarContent().getRightButtonWidth());
                 // 拖动窗口和双击判断
-                onFrameDrag = (ptMouse.y <= rcWindow.top + frameParameters.getTitleBarHeight()) && //
-                        (ptMouse.x < (rcWindow.right - (frameParameters.getControlBoxWidth())));
+                onFrameDrag = (ptMouse.y <= rcWindow.top + frameParameters.getTitleBarHeight()) //
+                        && (ptMouse.x > lb)
+                        //
+                        && (ptMouse.x < rb);
             }
             uRow = 0;
         } else if (ptMouse.y < rcWindow.bottom && ptMouse.y >= rcWindow.bottom - borderThickness) {

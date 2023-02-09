@@ -28,6 +28,16 @@ public class GroupItem extends AbsMovable {
         // group.selectItem(this, e);
     }
 
+    /**
+     * 过滤
+     * 
+     * @param t
+     * @return
+     */
+    public boolean match(Object t) {
+        return true;
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
         if (group != null) {
