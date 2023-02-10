@@ -12,6 +12,7 @@ import com.tyy.uml.core.gui.frame.TitleBarContent;
 import com.tyy.uml.core.gui.frame.Tray;
 import com.tyy.uml.gui.UMLFrame;
 import com.tyy.uml.gui.UMLMainPane;
+import com.tyy.uml.util.Constant;
 import com.tyy.uml.util.SystemUtils;
 
 public class UMLContext {
@@ -43,9 +44,7 @@ public class UMLContext {
         frame = new UMLFrame(workConfig.getConfig());
         //
         TitleBarContent barContent = frame.getTitleBar().getTitleBarContent();
-        barContent.addLeftButton("打开项目", (b, e) -> {
-            ctrl.showSettings(true);
-        });
+        barContent.addLeftButton("打开项目", Constant.openSetting);
 
         //
         ctrl = new UMLMainPane(frame, workConfig);

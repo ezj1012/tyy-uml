@@ -36,9 +36,9 @@ public class UMLSettings extends AbsUMLOperateMain implements BeanObserver, Grou
 
     ProjectSettings settings;
 
-    public UMLSettings(Ctrl ctrl, UMLOperatePanel operatePanel, UMLWork workConfig) {
+    public UMLSettings(Ctrl ctrl, UMLOperatePanel operatePanel) {
         super(ctrl, operatePanel);
-        this.workConfig = workConfig;
+        this.workConfig = ctrl.getWorkConfig();
         this.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.setLayout(new BorderLayout());
         projectManager = new ProjectManager(ctrl, workConfig);
@@ -77,7 +77,7 @@ public class UMLSettings extends AbsUMLOperateMain implements BeanObserver, Grou
 
     public void updateConfig(UMLGUIConfig cfg, String prop, Object newValue) {
         if (prop == null || "editorBackColor".equals(prop)) {
-            Color backColor = SWUtils.decodeColor(ctrl.getCfg().getEditorBackColor(), UMLGUIConfig.c252526);
+            Color backColor = SWUtils.decodeColor(ctrl.getCurProject().getConfig().getEditorBackColor(), UMLGUIConfig.c252526);
             setBackground(backColor);
         }
     }

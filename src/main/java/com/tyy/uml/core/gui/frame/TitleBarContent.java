@@ -3,6 +3,7 @@ package com.tyy.uml.core.gui.frame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.border.EmptyBorder;
 
+import com.tyy.uml.core.ctx.UMLContext;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
 import com.tyy.uml.gui.comm.TextButton;
 import com.tyy.uml.gui.comm.TitleLabelPanel;
@@ -68,12 +70,23 @@ public class TitleBarContent extends JLayeredPane implements DComponentListener,
         return w;
     }
 
+    public JButton addLeftButton(String text, String actionKey) {
+        TextButton tb = new TextButton(text);
+        ActionListener al = UMLContext.getContext().getCtrl().createAction(tb, actionKey);
+        return addLeftButton(tb, al);
+    }
+
     public JButton addLeftButton(String text, BiConsumer<JButton, ActionEvent> actionListener) {
         TextButton tb = new TextButton(text);
-        if (actionListener != null) {
-            tb.addActionListener(e -> {
-                actionListener.accept(tb, e);
-            });
+        return addLeftButton(tb, e -> {
+            actionListener.accept(tb, e);
+        });
+    }
+
+    private JButton addLeftButton(TextButton tb, ActionListener al) {
+        this.leftBtns.add(tb);
+        if (al != null) {
+            tb.addActionListener(al);
         }
         this.leftBtns.add(tb);
         this.add(tb, JLayeredPane.MODAL_LAYER);

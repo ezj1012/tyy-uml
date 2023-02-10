@@ -1,13 +1,10 @@
 package com.tyy.uml.gui.op;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JTextField;
@@ -20,6 +17,7 @@ import com.tyy.uml.core.gui.adapter.DMouseListener;
 import com.tyy.uml.gui.comm.SingleColorIcon;
 import com.tyy.uml.gui.comm.SingleColorIconButton;
 import com.tyy.uml.gui.comm.TitleLabelPanel;
+import com.tyy.uml.util.Constant;
 import com.tyy.uml.util.SWUtils;
 
 public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DComponentListener {
@@ -38,21 +36,23 @@ public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DCo
 
     Ctrl ctrl;
 
-    // UMLEditor editor;
-
     List<SingleColorIconButton> rightBtns = new ArrayList<>();
 
     List<SingleColorIconButton> leftBtns = new ArrayList<>();
 
     TitleLabelPanel fieldPanel;
 
-    public UMLOperateTitle(Ctrl ctrl) {
-        // public UMLEditorTitle(Ctrl ctrl, UMLEditor editor) {
-        this.setBorder(new EmptyBorder(0, 0, 0, 0));
+    SingleColorIconButton settingBtn;
+
+    UMLOperatePanel operatePanel;
+
+    public UMLOperateTitle(Ctrl ctrl, UMLOperatePanel operatePanel) {
         this.ctrl = ctrl;
-        // this.editor = editor;
+        this.operatePanel = operatePanel;
+        this.setBorder(new EmptyBorder(0, 0, 0, 0));
         SWUtils.fixedHeight(this, SIZE);
         this.initCentent();
+        this.registerAction();
         this.initBtn();
         this.addComponentListener(this);
         this.addMouseListener(this);
@@ -61,20 +61,38 @@ public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DCo
         this.fieldPanel.addMouseMotionListener(this);
     }
 
-    private void initBtn() {
-
-        SingleColorIconButton fixedBtn = createBtn("unlock.png", (btn, e) -> {
+    private void registerAction() {
+        this.ctrl.registerAction(Constant.fixedEditorPanel, (btn, e) -> {
             fixedPos = !fixedPos;
             btn.setSelected(fixedPos);
             this.repaint();
         });
-        fixedBtn.setSelectedIcon(new SingleColorIcon("lock.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
-        SingleColorIconButton settingBtn = createBtn("setting.png", (btn, e) -> {
-            setting = !setting;
+
+        this.ctrl.registerAction(Constant.openSetting, (btn, e) -> {
+            setting = true;
             btn.setSelected(setting);
-            ctrl.showSettings(setting);
+            operatePanel.showSettings(setting);
             this.repaint();
         });
+
+        this.ctrl.registerAction(Constant.toggleSetting, (btn, e) -> {
+            setting = !setting;
+            btn.setSelected(setting);
+            operatePanel.showSettings(setting);
+            this.repaint();
+        });
+
+        this.ctrl.registerAction(Constant.closeEditor, (btn, e) -> {
+            this.operatePanel.setVisible(false);
+            settingBtn.setSelected(setting = false);
+        });
+
+    }
+
+    private void initBtn() {
+        SingleColorIconButton fixedBtn = createBtn("unlock.png", Constant.fixedEditorPanel);
+        fixedBtn.setSelectedIcon(new SingleColorIcon("lock.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
+        settingBtn = createBtn("setting.png", Constant.toggleSetting);
         settingBtn.setSelectedIcon(new SingleColorIcon("setting.png", SIZE - 6, SIZE - 6).getImageIcon(new Color(133, 133, 133)));
 
         leftBtns.add(settingBtn);
@@ -83,14 +101,11 @@ public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DCo
             this.add(leftBtns.get(i), JLayeredPane.PALETTE_LAYER);
         }
 
-        rightBtns.add(createBtn("page_first.png", (btn, e) -> this.ctrl.setEditorPrevCenter()));
-        rightBtns.add(createBtn("view.png", (btn, e) -> this.ctrl.setEditorContentCenter()));
-        rightBtns.add(createBtn("page_last.png", (btn, e) -> this.ctrl.setEditorNextCenter()));
-        rightBtns.add(createBtn("list.png", (btn, e) -> this.ctrl.toggleEditorList()));
-        rightBtns.add(createBtn("close.png", (btn, e) -> {
-            this.ctrl.hideEditor();
-            settingBtn.setSelected(setting = false);
-        }));
+        rightBtns.add(createBtn("page_first.png", Constant.prevModel));
+        rightBtns.add(createBtn("view.png", Constant.curModel));
+        rightBtns.add(createBtn("page_last.png", Constant.nextModel));
+        rightBtns.add(createBtn("list.png", Constant.toggleEditorList));
+        rightBtns.add(createBtn("close.png", Constant.closeEditor));
         for (int i = rightBtns.size(); i > 0; i--) {
             rightBtns.get(i - 1).setBounds(getWidth() - SIZE * i, 0, SIZE, SIZE);
             this.add(rightBtns.get(i - 1), JLayeredPane.PALETTE_LAYER);
@@ -98,20 +113,10 @@ public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DCo
 
     }
 
-    private SingleColorIconButton createBtn(String icon, BiConsumer<SingleColorIconButton, ActionEvent> l) {
+    private SingleColorIconButton createBtn(String icon, String key) {
         SingleColorIconButton button = new SingleColorIconButton(SIZE, SIZE, new SingleColorIcon(icon, SIZE - 6, SIZE - 6), new Color(133, 133, 133));
         button.setRolloverBackgroupColor(new Color(70, 70, 70));
-        // button.setBounds(offIdx * SIZE, 0, SIZE, SIZE);
-        if (l != null) {
-            button.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    l.accept(button, e);
-                }
-
-            });
-        }
+        button.addActionListener(this.ctrl.createAction(button, key));
         return button;
     }
 
@@ -131,7 +136,7 @@ public class UMLOperateTitle extends JLayeredPane implements DMouseListener, DCo
     }
 
     private void initCentent() {
-        Color fontColor = SWUtils.decodeColor(ctrl.getCfg().getEditorFontColor(), UMLGUIConfig.cd4d4d4);
+        Color fontColor = SWUtils.decodeColor(ctrl.getCurProject().getConfig().getEditorFontColor(), UMLGUIConfig.cd4d4d4);
         fieldPanel = new TitleLabelPanel(SIZE, fontColor);
         fieldPanel.setHorizontalAlignment(JTextField.CENTER);
         this.add(fieldPanel, JLayeredPane.DEFAULT_LAYER);

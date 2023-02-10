@@ -28,6 +28,7 @@ import com.tyy.uml.gui.op.UMLOperatePanel;
 import com.tyy.uml.gui.op.editor.UMLEditor;
 import com.tyy.uml.gui.op.setting.UMLSettings;
 import com.tyy.uml.util.BeanHelper;
+import com.tyy.uml.util.Constant;
 import com.tyy.uml.util.BeanHelper.BeanObservale;
 import com.tyy.uml.util.SystemUtils;
 
@@ -42,10 +43,6 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
     // UMLCanvasScroll umlScorllPanel;
 
     UMLOperatePanel operatePanel;
-
-    UMLEditor editor;
-
-    UMLSettings settings;
 
     UMLWork workConfig;
 
@@ -67,6 +64,12 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         this.addComponentListener(this);
 
         this.refreshProject();
+
+        this.registerAction(Constant.prevModel, (btn, e) -> this.setEditorPrevCenter());
+        this.registerAction(Constant.nextModel, (btn, e) -> this.setEditorNextCenter());
+        this.registerAction(Constant.curModel, (btn, e) -> this.setEditorContentCenter());
+        this.registerAction(Constant.toggleEditorList, (btn, e) -> this.toggleEditorList());
+
     }
 
     public void initOperatePanel() {
@@ -76,8 +79,6 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         operatePanel.addKeyListener(this);
         operatePanel.setVisible(false);
 
-        this.editor = new UMLEditor(this, operatePanel);
-        this.settings = new UMLSettings(this, operatePanel, workConfig);
     }
 
     public void initCanvas() {
@@ -246,36 +247,22 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
         }
     }
 
-    @Override
-    public void showSettings(boolean setting) {
-        if (setting) {
-            this.settings.showMe();
-            this.settings.refresh();
-            this.settings.requestFocus();
-        } else {
-
-            setEditorContentCenter();
-        }
-        this.revalidate();
-        this.repaint();
-    }
-
-    @Override
-    public void showEditor(UMLInfoPanel info) {
-        canvasPanel.setCenter(info);
-        this.editor.setModel(info);
-        this.editor.showMe();
-        this.revalidate();
-        this.repaint();
-    }
+    // @Override
+    // public void showSettings(boolean setting) {
+    // if (setting) {
+    // this.settings.showMe();
+    // this.settings.refresh();
+    // this.settings.requestFocus();
+    // } else {
+    //
+    // setEditorContentCenter();
+    // }
+    // this.revalidate();
+    // this.repaint();
+    // }
 
     public void hideEditor() {
-        this.operatePanel.setVisible(false);
-    }
 
-    @Override
-    public UMLGUIConfig getCfg() {
-        return projectData.getConfig();
     }
 
     @Override
@@ -284,67 +271,8 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
     }
 
     @Override
-    public synchronized void setEditorContentCenter() {
-        UMLInfoPanel umlInfoPanel = this.editor.getUmlInfoPanel();
-        if (umlInfoPanel == null) {
-            umlInfoPanel = getSelectOrCreateUMLInfoPanel(0);
-        }
-        showEditor(umlInfoPanel);
-    }
-
-    @Override
-    public synchronized void setEditorNextCenter() {
-        showEditor(getSelectOrCreateUMLInfoPanel(1));
-    }
-
-    @Override
-    public synchronized void setEditorPrevCenter() {
-        showEditor(getSelectOrCreateUMLInfoPanel(-1));
-    }
-
-    /**
-     * 
-     * @param i
-     *            -1 上一个,0当前,1 下一个
-     * @return
-     */
-    private UMLInfoPanel getSelectOrCreateUMLInfoPanel(int i) {
-        UMLInfoPanel selected = null;
-        List<GroupItem> items = this.canvasPanel.getItems();
-        if (items.isEmpty()) {
-            UMLInfoPanel info = new UMLInfoPanel(this, null, this.canvasPanel.getWidth() / 2, this.canvasPanel.getHeight() / 2);
-            this.canvasPanel.create(info);
-        }
-        for (int j = 0; j < items.size(); j++) {
-            GroupItem groupItem = items.get(j);
-            if (groupItem.isSelected()) {
-                selected = (UMLInfoPanel) groupItem;
-                if (i != 0) {
-                    int idx = j + i;
-                    idx = idx < 0 ? items.size() - 1 : idx;
-                    idx = idx >= items.size() ? 0 : idx;
-                    selected = (UMLInfoPanel) items.get(idx);
-                    this.canvasPanel.selectItem(selected, null);
-                }
-                break;
-            }
-        }
-
-        if (selected == null && !items.isEmpty()) {
-            this.canvasPanel.selectItem(items.get(0), null);
-            selected = (UMLInfoPanel) items.get(0);
-        }
-        return selected;
-    }
-
-    @Override
-    public void toggleEditorList() {
-        if (this.editor.isVisible()) {
-            this.editor.toggleEditorList();
-        }
-        if (this.settings.isVisible()) {
-            this.settings.toggleEditorList();
-        }
+    public UMLWork getWorkConfig() {
+        return workConfig;
     }
 
 }

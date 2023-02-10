@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
@@ -33,6 +34,7 @@ import com.tyy.uml.util.SWUtils;
 import com.tyy.uml.util.UMLModelParser;
 import com.tyy.uml.util.BeanHelper.BeanObservale;
 import com.tyy.uml.util.BeanHelper.BeanObserver;
+import com.tyy.uml.util.Constant;
 
 public class UMLInfoPanel extends GroupItem implements BeanObserver {
 
@@ -160,7 +162,8 @@ public class UMLInfoPanel extends GroupItem implements BeanObserver {
 
     @Override
     public void mouseDblClicked(MouseEvent e, int c) {
-        this.ctrl.showEditor(this);
+        ActionListener action = this.ctrl.createAction(null, Constant.openEditor);
+        action.actionPerformed(null);
     }
 
     public static class UMLFieldsPanel extends JPanel {

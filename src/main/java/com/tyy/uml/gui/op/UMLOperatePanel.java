@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ComponentEvent;
+import java.util.List;
 import java.util.Observable;
 
 import javax.swing.JPanel;
@@ -12,6 +13,11 @@ import javax.swing.border.EmptyBorder;
 import com.tyy.uml.core.ctx.Ctrl;
 import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.core.gui.adapter.DComponentListener;
+import com.tyy.uml.gui.canvas.elements.UMLInfoPanel;
+import com.tyy.uml.gui.comm.group.GroupItem;
+import com.tyy.uml.gui.op.editor.UMLEditor;
+import com.tyy.uml.gui.op.setting.UMLSettings;
+import com.tyy.uml.util.Constant;
 import com.tyy.uml.util.SWUtils;
 import com.tyy.uml.util.BeanHelper.BeanObservale;
 import com.tyy.uml.util.BeanHelper.BeanObserver;
@@ -20,17 +26,15 @@ public class UMLOperatePanel extends JPanel implements BeanObserver, DComponentL
 
     private static final long serialVersionUID = 1L;
 
-    // static final int fixedWidth = 500;
-
     public static final int fixedHeight = 300;
 
     Ctrl ctrl;
 
     UMLOperateTitle title;
 
-    // UMLEditor editor;
+    UMLEditor editor;
 
-    // UMLSettings settings;
+    UMLSettings settings;
 
     AbsUMLOperateMain curMain;
 
@@ -38,8 +42,93 @@ public class UMLOperatePanel extends JPanel implements BeanObserver, DComponentL
         this.ctrl = ctrl;
         this.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.setLayout(new BorderLayout());
-        this.title = new UMLOperateTitle(ctrl);
+        this.title = new UMLOperateTitle(ctrl, this);
         this.add(title, BorderLayout.NORTH);
+        this.editor = new UMLEditor(ctrl, this);
+        this.settings = new UMLSettings(ctrl, this);
+
+    }
+
+    public void showSettings(boolean setting) {
+        if (setting) {
+            this.settings.showMe();
+            this.settings.refresh();
+            this.settings.requestFocus();
+        } else {
+            setEditorContentCenter();
+        }
+        this.revalidate();
+        this.repaint();
+    }
+
+    @Override
+    public void toggleEditorList() {
+        if (this.editor.isVisible()) {
+            this.editor.toggleEditorList();
+        }
+        if (this.settings.isVisible()) {
+            this.settings.toggleEditorList();
+        }
+    }
+
+    @Override
+    public void showEditor(UMLInfoPanel info) {
+        canvasPanel.setCenter(info);
+        this.editor.setModel(info);
+        this.editor.showMe();
+        this.revalidate();
+        this.repaint();
+    }
+
+    public synchronized void setEditorContentCenter() {
+        UMLInfoPanel umlInfoPanel = this.editor.getUmlInfoPanel();
+        if (umlInfoPanel == null) {
+            umlInfoPanel = getSelectOrCreateUMLInfoPanel(0);
+        }
+        showEditor(umlInfoPanel);
+    }
+
+    public synchronized void setEditorNextCenter() {
+        showEditor(getSelectOrCreateUMLInfoPanel(1));
+    }
+
+    public synchronized void setEditorPrevCenter() {
+        showEditor(getSelectOrCreateUMLInfoPanel(-1));
+    }
+
+    /**
+     * 
+     * @param i
+     *            -1 上一个,0当前,1 下一个
+     * @return
+     */
+    private UMLInfoPanel getSelectOrCreateUMLInfoPanel(int i) {
+        UMLInfoPanel selected = null;
+        List<GroupItem> items = this.canvasPanel.getItems();
+        if (items.isEmpty()) {
+            UMLInfoPanel info = new UMLInfoPanel(this, null, this.canvasPanel.getWidth() / 2, this.canvasPanel.getHeight() / 2);
+            this.canvasPanel.create(info);
+        }
+        for (int j = 0; j < items.size(); j++) {
+            GroupItem groupItem = items.get(j);
+            if (groupItem.isSelected()) {
+                selected = (UMLInfoPanel) groupItem;
+                if (i != 0) {
+                    int idx = j + i;
+                    idx = idx < 0 ? items.size() - 1 : idx;
+                    idx = idx >= items.size() ? 0 : idx;
+                    selected = (UMLInfoPanel) items.get(idx);
+                    this.canvasPanel.selectItem(selected, null);
+                }
+                break;
+            }
+        }
+
+        if (selected == null && !items.isEmpty()) {
+            this.canvasPanel.selectItem(items.get(0), null);
+            selected = (UMLInfoPanel) items.get(0);
+        }
+        return selected;
     }
 
     public UMLOperateTitle getTitle() {
@@ -55,15 +144,15 @@ public class UMLOperatePanel extends JPanel implements BeanObserver, DComponentL
 
     private void updateConfig(UMLGUIConfig cfg, String prop, Object newValue) {
         if (prop == null || "editorBackColor".equals(prop)) {
-            Color backColor = SWUtils.decodeColor(ctrl.getCfg().getEditorBackColor(), UMLGUIConfig.c252526);
+            Color backColor = SWUtils.decodeColor(ctrl.getCurProject().getConfig().getEditorBackColor(), UMLGUIConfig.c252526);
             setBackground(backColor);
         }
         if (prop == null || "editorTitleBackColor".equals(prop)) {
-            Color backColor = SWUtils.decodeColor(ctrl.getCfg().getEditorTitleBackColor(), UMLGUIConfig.c333333);
+            Color backColor = SWUtils.decodeColor(ctrl.getCurProject().getConfig().getEditorTitleBackColor(), UMLGUIConfig.c333333);
             title.setBackground(backColor);
         }
         if (prop == null || "editorFontColor".equals(prop)) {
-            Color fontColor = SWUtils.decodeColor(ctrl.getCfg().getEditorFontColor(), UMLGUIConfig.cd4d4d4);
+            Color fontColor = SWUtils.decodeColor(ctrl.getCurProject().getConfig().getEditorFontColor(), UMLGUIConfig.cd4d4d4);
             title.setForeground(fontColor);
         }
     }

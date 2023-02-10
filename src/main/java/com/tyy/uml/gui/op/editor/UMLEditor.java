@@ -83,17 +83,17 @@ public class UMLEditor extends AbsUMLOperateMain implements BeanObserver, DCompo
 
     public void updateConfig(UMLGUIConfig cfg, String prop, Object newValue) {
         if (prop == null || "editorBackColor".equals(prop)) {
-            Color backColor = SWUtils.decodeColor(ctrl.getCfg().getEditorBackColor(), UMLGUIConfig.c252526);
+            Color backColor = SWUtils.decodeColor(ctrl.getCurProject().getConfig().getEditorBackColor(), UMLGUIConfig.c252526);
             setBackground(backColor);
             editorPane.setBackground(backColor);
             rltEditor.setBackground(backColor);
         }
         if (prop == null || "editorFontColor".equals(prop)) {
-            Color fontColor = SWUtils.decodeColor(ctrl.getCfg().getEditorFontColor(), UMLGUIConfig.cd4d4d4);
+            Color fontColor = SWUtils.decodeColor(ctrl.getCurProject().getConfig().getEditorFontColor(), UMLGUIConfig.cd4d4d4);
             editorPane.setForeground(fontColor);
         }
         if (prop == null || "editorCaretColor".equals(prop)) {
-            editorPane.setCaretColor(SWUtils.decodeColor(ctrl.getCfg().getEditorCaretColor(), UMLGUIConfig.caeafad));
+            editorPane.setCaretColor(SWUtils.decodeColor(ctrl.getCurProject().getConfig().getEditorCaretColor(), UMLGUIConfig.caeafad));
         }
     }
 

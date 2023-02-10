@@ -49,7 +49,7 @@ public class ProjectSettings extends JPanel implements DMouseListener {
             if (project != null) {
                 ctrl.loadProject(project, false);
                 ctrl.refreshProject();
-                ctrl.showSettings(false);
+                umlSettings.getOperatePanel().showSettings(false);
             }
         });
         this.add(titlePanel, BorderLayout.NORTH);

@@ -26,7 +26,7 @@ public class UMLCanvas extends AbsScrollCanvas implements BeanObserver {
         this.ctrl = ctrl;
         setLayout(null);
 
-        UMLGUIConfig cfg = this.ctrl.getCfg();
+        UMLGUIConfig cfg = this.ctrl.getCurProject().getConfig();
         setBounds(0, 0, cfg.getCanvasWidth(), cfg.getCanvasHeight());
         setPreferredSize(new Dimension(cfg.getCanvasWidth(), cfg.getCanvasHeight()));
         setCenter();
@@ -47,8 +47,6 @@ public class UMLCanvas extends AbsScrollCanvas implements BeanObserver {
         create(classDes, e);
     }
 
-  
-
     public void create(UMLInfoPanel info) {
         create(info, null);
     }
@@ -68,18 +66,18 @@ public class UMLCanvas extends AbsScrollCanvas implements BeanObserver {
 
     private void updateConfig(UMLGUIConfig cfg, String prop, Object newValue) {
         if (prop == null || "canvasBackColor".equals(prop)) {
-            Color backColor = SWUtils.decodeColor(ctrl.getCfg().getCanvasBackColor(), UMLGUIConfig.c252526);
+            Color backColor = SWUtils.decodeColor(ctrl.getCurProject().getConfig().getCanvasBackColor(), UMLGUIConfig.c252526);
             setBackground(backColor);
             setBackground(backColor);
         }
         if (prop == null || "canvasThumbColor".equals(prop)) {
-            setThumbColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbColor(), UMLGUIConfig.c424242));
+            setThumbColor(SWUtils.decodeColor(ctrl.getCurProject().getConfig().getCanvasThumbColor(), UMLGUIConfig.c424242));
         }
         if (prop == null || "canvasThumbRolloverColor".equals(prop)) {
-            setThumbRolloverColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbRolloverColor(), UMLGUIConfig.c4F4F4F));
+            setThumbRolloverColor(SWUtils.decodeColor(ctrl.getCurProject().getConfig().getCanvasThumbRolloverColor(), UMLGUIConfig.c4F4F4F));
         }
         if (prop == null || "canvasThumbDraggingColor".equals(prop)) {
-            setThumbDraggingColor(SWUtils.decodeColor(ctrl.getCfg().getCanvasThumbDraggingColor(), UMLGUIConfig.c5E5E5E));
+            setThumbDraggingColor(SWUtils.decodeColor(ctrl.getCurProject().getConfig().getCanvasThumbDraggingColor(), UMLGUIConfig.c5E5E5E));
         }
     }
 

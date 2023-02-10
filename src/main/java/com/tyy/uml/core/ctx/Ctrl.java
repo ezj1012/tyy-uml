@@ -1,12 +1,11 @@
 package com.tyy.uml.core.ctx;
 
-import com.tyy.uml.core.ctx.bean.UMLGUIConfig;
 import com.tyy.uml.core.ctx.model.UMLProject;
 import com.tyy.uml.core.ctx.model.UMLProjectData;
+import com.tyy.uml.core.ctx.model.UMLWork;
 import com.tyy.uml.core.gui.adapter.DKeyListener;
-import com.tyy.uml.gui.canvas.elements.UMLInfoPanel;
 
-public interface Ctrl extends DKeyListener {
+public interface Ctrl extends ActionManager, DKeyListener {
 
     void saveConfigs();
 
@@ -22,20 +21,16 @@ public interface Ctrl extends DKeyListener {
 
     void refreshProject();
 
-    void setEditorContentCenter();
+    UMLWork getWorkConfig();
 
-    void setEditorNextCenter();
+    // void setEditorContentCenter();
+    // void setEditorNextCenter();
+    // void setEditorPrevCenter();
+    // void showEditor(UMLInfoPanel info);
+    // void hideEditor();
+    // void toggleEditorList();
+    // UMLGUIConfig getCfg();
 
-    void setEditorPrevCenter();
-
-    void showEditor(UMLInfoPanel info);
-
-    void hideEditor();
-
-    void toggleEditorList();
-
-    UMLGUIConfig getCfg();
-
-    void showSettings(boolean setting);
+    // void showSettings(boolean setting);
 
 }

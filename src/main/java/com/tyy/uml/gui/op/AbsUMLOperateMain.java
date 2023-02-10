@@ -38,6 +38,10 @@ public abstract class AbsUMLOperateMain extends JPanel {
         return this.operatePanel.getTitle();
     }
 
+    public UMLOperatePanel getOperatePanel() {
+        return operatePanel;
+    }
+
     @Override
     public int getWidth() {
         int w = 0;
