@@ -65,11 +65,6 @@ public class UMLMainPane extends JLayeredPane implements DComponentListener, Ctr
 
         this.refreshProject();
 
-        this.registerAction(Constant.prevModel, (btn, e) -> this.setEditorPrevCenter());
-        this.registerAction(Constant.nextModel, (btn, e) -> this.setEditorNextCenter());
-        this.registerAction(Constant.curModel, (btn, e) -> this.setEditorContentCenter());
-        this.registerAction(Constant.toggleEditorList, (btn, e) -> this.toggleEditorList());
-
     }
 
     public void initOperatePanel() {

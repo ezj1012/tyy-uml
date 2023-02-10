@@ -46,7 +46,10 @@ public class UMLOperatePanel extends JPanel implements BeanObserver, DComponentL
         this.add(title, BorderLayout.NORTH);
         this.editor = new UMLEditor(ctrl, this);
         this.settings = new UMLSettings(ctrl, this);
-
+        this.ctrl.registerAction(Constant.prevModel, (btn, e) -> this.setEditorPrevCenter());
+        this.ctrl.registerAction(Constant.nextModel, (btn, e) -> this.setEditorNextCenter());
+        this.ctrl.registerAction(Constant.curModel, (btn, e) -> this.setEditorContentCenter());
+        this.ctrl.registerAction(Constant.toggleEditorList, (btn, e) -> this.toggleEditorList());
     }
 
     public void showSettings(boolean setting) {
@@ -61,7 +64,6 @@ public class UMLOperatePanel extends JPanel implements BeanObserver, DComponentL
         this.repaint();
     }
 
-    @Override
     public void toggleEditorList() {
         if (this.editor.isVisible()) {
             this.editor.toggleEditorList();
@@ -71,7 +73,6 @@ public class UMLOperatePanel extends JPanel implements BeanObserver, DComponentL
         }
     }
 
-    @Override
     public void showEditor(UMLInfoPanel info) {
         canvasPanel.setCenter(info);
         this.editor.setModel(info);
